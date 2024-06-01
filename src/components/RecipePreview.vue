@@ -27,7 +27,7 @@ export default {
   },
   data() {
     return {
-      image_load: false,
+      image_load: true,
     };
   },
   props: {
@@ -36,29 +36,29 @@ export default {
       required: true,
     },
 
-    // id: {
-    //   type: Number,
-    //   required: true
-    // },
-    // title: {
-    //   type: String,
-    //   required: true
-    // },
-    // readyInMinutes: {
-    //   type: Number,
-    //   required: true
-    // },
-    // image: {
-    //   type: String,
-    //   required: true
-    // },
-    // aggregateLikes: {
-    //   type: Number,
-    //   required: false,
-    //   default() {
-    //     return undefined;
-    //   }
-    // }
+    id: {
+      type: Number,
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    readyInMinutes: {
+      type: Number,
+      required: true,
+    },
+    image: {
+      type: String,
+      required: true,
+    },
+    aggregateLikes: {
+      type: Number,
+      required: false,
+      default() {
+        return undefined;
+      },
+    },
   },
 };
 </script>
@@ -73,7 +73,7 @@ export default {
 }
 .recipe-preview > .recipe-body {
   width: 100%;
-  height: 200px;
+  height: 150x;
   position: relative;
 }
 
@@ -83,8 +83,8 @@ export default {
   margin-top: auto;
   margin-bottom: auto;
   display: block;
-  width: 98%;
-  height: auto;
+  max-width: 100%; /* Ensures the image doesn't exceed its container's width */
+  max-height: 100x; /* Set a maximum height for the image */
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
