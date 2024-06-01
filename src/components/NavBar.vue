@@ -20,7 +20,7 @@
 <template>
   <div>
     <b-navbar toggleable="lg" type="dark" variant="dark" id="omer">
-      <b-navbar-brand class="name" href="#">Omer's Kitchen 🥂 </b-navbar-brand>
+      <b-navbar-brand class="name" href="/">Omer's Kitchen 🥂 </b-navbar-brand>
       <router-link class="link" :to="{ name: 'main' }">Recipes</router-link>
       <router-link class="link" :to="{ name: 'about' }">About</router-link>
       <router-link class="link" :to="{ name: 'search' }">Search</router-link>
