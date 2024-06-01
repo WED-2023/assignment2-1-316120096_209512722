@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <NavBar />
+    <NavBar :logout="Logout" />
     <router-view />
   </div>
 </template>
@@ -27,27 +27,4 @@ export default {
 
 <style lang="scss">
 @import "@/scss/form-style.scss";
-
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: rgb(208, 200, 181);
-  color: #3f4e4f;
-  min-height: 100vh;
-}
-
-#nav {
-  padding: 30px;
-  color: rgb(162, 123, 92);
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>

@@ -47,10 +47,22 @@
           </b-nav-form>
           <span class="user" v-if="!$root.store.username">
             <em class="guest">Guest</em>
-            <b-button class="my-2 my-sm-0 login-btn" @click="login"
+            <b-button
+              class="my-2 my-sm-0 login-btn"
+              @click="
+                () => {
+                  this.$router.push('/login');
+                }
+              "
               >Log In</b-button
             >
-            <b-button class="my-2 my-sm-0 signup-btn" @click="register"
+            <b-button
+              class="my-2 my-sm-0 signup-btn"
+              @click="
+                () => {
+                  this.$router.push('/register');
+                }
+              "
               >Sign Up</b-button
             >
           </span>
@@ -59,11 +71,11 @@
               <template #button-content>
                 <em>{{ $root.store.username }}</em>
               </template>
-              <b-dropdown-item href="#">favorits</b-dropdown-item>
+              <b-dropdown-item href="#">favorits 🩵</b-dropdown-item>
               <b-dropdown-item href="#">My recipes</b-dropdown-item>
-              <b-dropdown-item href="#">Family recipes</b-dropdown-item>
+              <b-dropdown-item href="#">Family recipes 👩‍👩‍👦‍👦 </b-dropdown-item>
             </b-nav-item-dropdown>
-            <b-button class="signout" @="signout">Sign out</b-button>
+            <b-button class="signout" @click="logout">Log out</b-button>
           </span>
         </b-navbar-nav>
       </b-collapse>
@@ -73,6 +85,11 @@
 
 <script>
 export default {
+  props: {
+    logout: {
+      required: true,
+    },
+  },
   name: "NavBar",
 };
 </script>

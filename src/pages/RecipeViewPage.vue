@@ -3,6 +3,7 @@
     <div v-if="recipe">
       <div class="recipe-header mt-3 mb-4">
         <h1>{{ recipe.title }}</h1>
+        <p>recipe ID : {{ recipeId }}</p>
         <img :src="recipe.image" class="center" />
       </div>
       <div class="recipe-body">
@@ -46,11 +47,14 @@ import { mockGetRecipeFullDetails } from "../services/recipes.js";
 export default {
   data() {
     return {
-      recipe: null
+      recipe: null,
+      recipeId: null,
     };
   },
   async created() {
     try {
+      this.recipeId = this.$route.params.recipeId;
+
       let response;
       // response = this.$route.params.response;
 
@@ -61,9 +65,9 @@ export default {
         //     withCredentials: true
         //   }
         // );
-
+        console.log("this.$route.params.recipeId", this.$route.params.recipeId);
         response = mockGetRecipeFullDetails(this.$route.params.recipeId);
-
+        console.log("response", response);
         // console.log("response.status", response.status);
         if (response.status !== 200) this.$router.replace("/NotFound");
       } catch (error) {
@@ -79,7 +83,7 @@ export default {
         aggregateLikes,
         readyInMinutes,
         image,
-        title
+        title,
       } = response.data.recipe;
 
       let _instructions = analyzedInstructions
@@ -97,14 +101,14 @@ export default {
         aggregateLikes,
         readyInMinutes,
         image,
-        title
+        title,
       };
 
       this.recipe = _recipe;
     } catch (error) {
       console.log(error);
     }
-  }
+  },
 };
 </script>
 
