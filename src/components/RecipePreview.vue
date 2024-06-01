@@ -27,14 +27,14 @@ export default {
   },
   data() {
     return {
-      image_load: false
+      image_load: false,
     };
   },
   props: {
     recipe: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
 
     // id: {
     //   type: Number,
@@ -59,7 +59,7 @@ export default {
     //     return undefined;
     //   }
     // }
-  }
+  },
 };
 </script>
 
@@ -94,6 +94,7 @@ export default {
   width: 100%;
   height: 50%;
   overflow: hidden;
+  color: rgb(118, 86, 59);
 }
 
 .recipe-preview .recipe-footer .recipe-title {

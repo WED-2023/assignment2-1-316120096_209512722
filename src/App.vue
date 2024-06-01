@@ -1,25 +1,17 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link :to="{ name: 'main' }">Vue Recipes</router-link>|
-      <router-link :to="{ name: 'search' }">Search</router-link>|
-      {{ !$root.store.username }}
-      <span v-if="!$root.store.username">
-        Guest:
-        <router-link :to="{ name: 'register' }">Register</router-link>|
-        <router-link :to="{ name: 'login' }">Login</router-link>|
-      </span>
-      <span v-else>
-        {{ $root.store.username }}: <button @click="Logout">Logout</button>|
-      </span>
-    </div>
+    <NavBar />
     <router-view />
   </div>
 </template>
-
 <script>
+import NavBar from "@/components/NavBar";
+
 export default {
   name: "App",
+  components: {
+    NavBar,
+  },
   methods: {
     Logout() {
       this.$root.store.logout();
@@ -28,8 +20,8 @@ export default {
       this.$router.push("/").catch(() => {
         this.$forceUpdate();
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -40,12 +32,14 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  background-color: rgb(208, 200, 181);
+  color: #3f4e4f;
   min-height: 100vh;
 }
 
 #nav {
   padding: 30px;
+  color: rgb(162, 123, 92);
 }
 
 #nav a {
