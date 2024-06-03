@@ -1,104 +1,110 @@
+<!-- SearchPage.vue -->
 <template>
   <div class="container">
     <!-- Search Form -->
-    <div class="search-section">
-      <h1 class="title">Find Your Recipe</h1>
-      <form @submit.prevent="searchRecipes" class="search-form">
-        <input
-          type="text"
-          v-model="searchQuery"
-          placeholder="Search for recipes..."
-          class="search-input"
-        />
-        <button type="submit" class="search-button">Search</button>
-      </form>
-      <div class="filters">
-        <h2>Filter By Category</h2>
-        <select v-model="selectedCategory" class="filter-select">
-          <option value="">All Categories</option>
-          <option
-            v-for="category in categories"
-            :value="category"
-            :key="category"
-          >
-            {{ category }}
-          </option>
-        </select>
-      </div>
+    <form @submit.prevent="searchRecipes" class="search-form">
+      <input
+        type="text"
+        v-model="searchQuery"
+        placeholder="Search for recipes..."
+        class="search-input"
+      />
+      <b-form-group label="Results count" class="results-count">
+        <b-form-select v-model="resultsCount">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+        </b-form-select>
+      </b-form-group>
+      <b-form-group label="Sort by" class="sort-by">
+        <b-form-select v-model="sortBy">
+          <option value="likes">Likes</option>
+          <option value="time">Time to Make</option>
+        </b-form-select>
+      </b-form-group>
+      <button type="submit" class="search-button">Search</button>
+    </form>
+
+    <div v-if="loading" class="loading-spinner">
+      <b-spinner label="Loading..."></b-spinner>
     </div>
 
-    <!-- Search Results -->
-    <div class="search-results" v-if="showResults">
-      <h2>Search Results</h2>
-      <div v-if="filteredResults.length > 0">
-        <div
-          v-for="recipe in displayedResults"
-          :key="recipe.id"
-          class="recipe-card"
-        >
-          <h3>{{ recipe.name }}</h3>
-          <p>Category: {{ recipe.category }}</p>
-        </div>
-      </div>
-      <div v-else>
-        <p class="no-results">No results found.</p>
-      </div>
+    <div v-if="filteredRecipes.length" class="recipe-details">
+      <RecipeDetails
+        v-for="(recipe, index) in filteredRecipes"
+        :key="index"
+        :recipe="recipe"
+      />
+    </div>
+    <!-- No Recipes Found -->
+    <div v-else-if="!loading && !filteredRecipes.length" class="no-recipes">
+      No recipes found.
     </div>
   </div>
 </template>
 
 <script>
+import { mockGetRecipeFullDetails } from "../services/recipes.js";
+import RecipeDetails from "../components/RecipeDetails.vue";
+
 export default {
+  components: {
+    RecipeDetails,
+  },
   data() {
     return {
       searchQuery: "",
-      selectedCategory: "",
-      categories: [
-        "vegetarian",
-        "vegan",
-        "glutenFree",
-        "dairyFree",
-        "veryHealthy",
-        "cheap",
-        "veryPopular",
-        "sustainable",
-        "lowFodmap",
-      ],
-      searchResults: [
-        // Add more sample data as needed
-      ],
+      filteredRecipes: [],
+      resultsCount: 5, // default value
+      sortBy: "likes", // default sorting option
+      loading: false,
     };
   },
+
   computed: {
-    filteredResults() {
-      if (!this.searchQuery && !this.selectedCategory) {
-        return [];
-      }
-      let results = this.searchResults;
-      if (this.searchQuery) {
-        results = results.filter((recipe) =>
-          recipe.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-        );
-      }
-      if (this.selectedCategory && this.selectedCategory !== "All Categories") {
-        results = results.filter(
-          (recipe) => recipe.category === this.selectedCategory
-        );
-      }
-      return results;
-    },
-    displayedResults() {
-      return this.filteredResults;
-    },
-    showResults() {
-      return this.searchQuery || this.selectedCategory;
+    sortedRecipes() {
+      return this.filteredRecipes.sort((a, b) => {
+        if (this.sortBy === "likes") {
+          return b.likes - a.likes;
+        } else if (this.sortBy === "time") {
+          return a.timeToMake - b.timeToMake;
+        }
+        return 0;
+      });
     },
   },
+
   methods: {
-    searchRecipes() {
-      // This method is optional, can be used for additional actions when searching
-      console.log("Searching for:", this.searchQuery);
-      console.log("Selected Category:", this.selectedCategory);
+    async searchRecipes() {
+      const query = this.searchQuery.trim().toLowerCase();
+      if (!query) {
+        this.filteredRecipes = [];
+        return;
+      }
+
+      this.loading = true;
+
+      try {
+        const response = await mockGetRecipeFullDetails("1");
+        if (response.status === 200) {
+          const recipe = response.data.recipe;
+          const results = [];
+          for (let i = 0; i < this.resultsCount; i++) {
+            const recipeCopy = { ...recipe };
+            const title = recipeCopy.title.toLowerCase();
+            if (title.includes(query)) {
+              results.push(recipeCopy);
+            }
+          }
+          this.filteredRecipes = results;
+        } else {
+          console.error("Recipe not found");
+        }
+      } catch (error) {
+        console.error("An error occurred while fetching the recipes:", error);
+      } finally {
+        this.loading = false;
+      }
     },
   },
 };
@@ -106,74 +112,54 @@ export default {
 
 <style scoped>
 .container {
+  padding: 20px;
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
 }
-
-.search-section {
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-.title {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
 .search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+.search-input {
+  flex-grow: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.results-count {
+  flex-shrink: 0;
+}
+.search-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+.search-button:hover {
+  background-color: #0056b3;
+}
+.recipe-details {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+.no-recipes {
+  text-align: center;
+  font-size: 18px;
+  color: #777;
+}
+.loading-spinner {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.search-input {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.search-button {
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-left: 10px;
-}
-
-.filters {
-  margin-top: 20px;
-}
-
-.filter-select {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
-}
-
-.search-results {
-  background-color: #3b895c;
-  padding: 20px;
-  border-radius: 8px;
-}
-
-.recipe-card {
-  background-color: rgb(54, 209, 201);
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.no-results {
-  text-align: center;
-  font-style: italic;
-  color: #e1e1e1;
+  height: 100px;
 }
 </style>
