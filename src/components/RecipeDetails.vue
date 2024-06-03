@@ -1,27 +1,28 @@
 <!-- RecipeDetails.vue -->
 <template>
-  <div class="recipe-details">
-    <h2>{{ recipe.title }}</h2>
-    <img :src="recipe.image" alt="Recipe Image" class="recipe-image" />
-    <p>
-      <span class="ready-in">Ready in:</span>
-      {{ recipe.readyInMinutes }} minutes
-    </p>
-    <p><span class="likes">Likes:</span> {{ recipe.aggregateLikes }}</p>
-    <h3>Instructions:</h3>
-    <ol>
-      <li v-for="(s, index) in recipe._instructions" :key="s.number">
-        {{ s.step }} <br />
-        {{ console.log(`Step ${index + 1}: ${s.step}`) }}
-      </li>
-    </ol>
-  </div>
+  <router-link
+    :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
+    class="recipe-preview"
+  >
+    <div class="recipe-body">
+      <img v-if="image_load" :src="recipe.image" class="recipe-image" />
+    </div>
+    <div class="recipe-footer">
+      <div :title="recipe.title" class="recipe-title">
+        {{ recipe.title }}
+      </div>
+      <ul class="recipe-overview">
+        <li>{{ recipe.readyInMinutes }} minutes</li>
+        <li>{{ recipe.aggregateLikes }} likes</li>
+      </ul>
+    </div>
+  </router-link>
 </template>
 
 <script>
 export default {
   mounted() {
-    this.axios.get(this.recipe.image).then((i) => {
+    this.axios.get(this.recipe.image).then(() => {
       this.image_load = true;
     });
   },
@@ -35,7 +36,6 @@ export default {
       type: Object,
       required: true,
     },
-
     id: {
       type: Number,
       required: true,
@@ -68,59 +68,89 @@ export default {
 </script>
 
 <style scoped>
-.recipe-details {
-  background-color: #f8f8f8;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.recipe-preview {
+  display: block;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-h2 {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
+.recipe-preview:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.recipe-body {
+  position: relative;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  background-color: #f0f0f0;
 }
 
 .recipe-image {
-  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  max-height: 300px;
-  object-fit: cover;
-  border-radius: 4px;
-  margin-bottom: 20px;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.3s;
+  border-bottom: 2px solid #ff6b6b;
 }
 
-p {
-  font-size: 16px;
-  color: #555;
-  margin-bottom: 10px;
+.image-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+  font-size: 18px;
+  background-color: #f0f0f0;
 }
 
-.ready-in,
-.likes {
-  font-weight: bold;
-  color: #ff6b6b;
+.recipe-footer {
+  padding: 20px;
+  text-align: center;
 }
 
-h3 {
+.recipe-title {
   font-size: 20px;
   font-weight: bold;
   color: #333;
   margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-ol {
-  list-style-type: decimal;
-  padding-left: 20px;
-  margin-bottom: 20px;
-}
-
-li {
+.recipe-overview {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
   font-size: 16px;
-  color: #555;
-  margin-bottom: 10px;
-  line-height: 1.5;
+  color: #777;
+}
+
+.recipe-overview li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.recipe-overview li::before {
+  content: "•";
+  margin-right: 5px;
+  color: #ff6b6b;
+}
+
+.recipe-overview li:first-child::before {
+  display: none;
 }
 </style>
