@@ -1,22 +1,3 @@
-<!-- <template>
-  <div id="app">
-    <div id="nav">
-      <router-link :to="{ name: 'main' }">Vue Recipes</router-link>|
-      <router-link :to="{ name: 'search' }">Search</router-link>|
-      {{ !$root.store.username }}
-      <span v-if="!$root.store.username">
-        Guest:
-        <router-link :to="{ name: 'register' }">Register</router-link>|
-        <router-link :to="{ name: 'login' }">Login</router-link>|
-      </span>
-      <span v-else>
-        {{ $root.store.username }}: <button @click="Logout">Logout</button>|
-      </span>
-    </div>
-    <router-view />
-  </div>
-</template> -->
-
 <template>
   <div>
     <b-navbar toggleable="lg" type="dark" variant="dark" id="omer">
@@ -71,9 +52,18 @@
               <template #button-content>
                 <em>{{ $root.store.username }}</em>
               </template>
-              <b-dropdown-item href="#">favorits 🩵</b-dropdown-item>
-              <b-dropdown-item href="#">My recipes</b-dropdown-item>
-              <b-dropdown-item href="#">Family recipes 👩‍👩‍👦‍👦 </b-dropdown-item>
+
+              <router-link class="dropdown-item" :to="{ name: 'FavoritesPage' }"
+                >Favorites 🩵</router-link
+              >
+              <router-link class="dropdown-item" :to="{ name: 'MyRecipesPage' }"
+                >My recipes</router-link
+              >
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'FamilyRecipePage' }"
+                >Family recipes 👩‍👩‍👦‍👦</router-link
+              >
             </b-nav-item-dropdown>
             <b-button class="signout" @click="logout">Log out</b-button>
           </span>

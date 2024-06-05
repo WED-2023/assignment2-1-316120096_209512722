@@ -37,6 +37,21 @@ const routes = [
     name: "notFound",
     component: NotFound,
   },
+  {
+    path: "/favorites",
+    name: "FavoritesPage",
+    component: () => import("./pages/UserPages/FavoritesPage"),
+  },
+  {
+    path: "/my-recipes",
+    name: "MyRecipesPage",
+    component: () => import("./pages/UserPages/MyRecipesPage"),
+  },
+  {
+    path: "/family-recipes",
+    name: "FamilyRecipePage",
+    component: () => import("./pages/UserPages/FamilyRecipePage"),
+  },
 ];
 
 export default routes;
