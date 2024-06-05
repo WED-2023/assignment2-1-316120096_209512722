@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Favorite Recipes 🩵</h1>
+    <h1>My recipes</h1>
     <div v-if="favorites.length > 0">
       <div v-for="recipe in favorites" :key="recipe.id">
         <recipe-preview :recipe="recipe" />
@@ -14,7 +14,7 @@
 
 <script>
 import RecipePreview from "@/components/RecipePreview.vue";
-import { mockGetFamilyRecipes } from "@/services/user";
+import { mockGetFavorites } from "../../services/user";
 
 export default {
   name: "FavoritesPage",
@@ -32,10 +32,10 @@ export default {
   methods: {
     async updateFavorites() {
       try {
-        const response = mockGetFamilyRecipes();
-        console.log(response);
-        const recipes = response.data.recipes;
-        console.log(recipes);
+        const response = mockGetFavorites();
+        console.log("Full response:", response);
+        const recipes = response.response.data.recipes;
+        console.log("Recipes array:", recipes);
         this.favorites = [];
         this.favorites.push(...recipes);
       } catch (error) {
@@ -46,4 +46,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped></style>

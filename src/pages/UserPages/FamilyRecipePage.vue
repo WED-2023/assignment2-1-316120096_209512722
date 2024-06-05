@@ -14,7 +14,7 @@
 
 <script>
 import RecipePreview from "@/components/RecipePreview.vue";
-import { mockGetFamilyRecipes } from "@/services/user";
+import { mockGetFavorites } from "../../services/user";
 
 export default {
   name: "FavoritesPage",
@@ -32,10 +32,10 @@ export default {
   methods: {
     async updateFavorites() {
       try {
-        const response = mockGetFamilyRecipes();
-        console.log("mockget:", response);
-        const recipes = response.data.recipes;
-        console.log("recipes:", recipes);
+        const response = mockGetFavorites();
+        console.log("Full response:", response);
+        const recipes = response.response.data.recipes;
+        console.log("Recipes array:", recipes);
         this.favorites = [];
         this.favorites.push(...recipes);
       } catch (error) {
@@ -46,4 +46,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped></style>

@@ -3,9 +3,9 @@ import e from "cors";
 import recipe_full_view from "../assets/mocks/recipe_full_view.json";
 import recipe_preview from "../assets/mocks/recipe_preview.json";
 
-let favortieRecipes = [recipe_preview];
-let userRecipes = [recipe_preview];
-let familyRecipes = [recipe_preview];
+let favortieRecipes = [...recipe_preview];
+let userRecipes = [...recipe_preview];
+let familyRecipes = [...recipe_preview];
 
 export function mockAddFavorite(recipeId) {
   const recipe = recipe_preview.find((recipe) => recipe.id === recipeId);
