@@ -18,17 +18,17 @@ import { mockGetRecipesPreview } from "../services/recipes.js";
 export default {
   name: "RecipePreviewList",
   components: {
-    RecipePreview
+    RecipePreview,
   },
   props: {
     title: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      recipes: []
+      recipes: [],
     };
   },
   mounted() {
@@ -44,7 +44,6 @@ export default {
         const amountToFetch = 5; // Set this to how many recipes you want to fetch
         const response = mockGetRecipesPreview(amountToFetch);
 
-
         console.log(response);
         const recipes = response.data.recipes;
         console.log(recipes);
@@ -53,8 +52,8 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

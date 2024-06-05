@@ -23,14 +23,34 @@ const routes = [
     component: () => import("./pages/SearchPage"),
   },
   {
-    path: "   ",
+    path: "/recipe/:recipeId",
     name: "recipe",
     component: () => import("./pages/RecipeViewPage"),
+  },
+  {
+    path: "/about/",
+    name: "about",
+    component: () => import("./pages/AboutPage"),
   },
   {
     path: "*",
     name: "notFound",
     component: NotFound,
+  },
+  {
+    path: "/favorites",
+    name: "FavoritesPage",
+    component: () => import("./pages/UserPages/FavoritesPage"),
+  },
+  {
+    path: "/my-recipes",
+    name: "MyRecipesPage",
+    component: () => import("./pages/UserPages/MyRecipesPage"),
+  },
+  {
+    path: "/family-recipes",
+    name: "FamilyRecipePage",
+    component: () => import("./pages/UserPages/FamilyRecipePage"),
   },
 ];
 
