@@ -1,20 +1,26 @@
 <template>
   <div class="container">
-    <div v-if="recipe">
-      <div class="recipe-header mt-3 mb-4">
-        <h1>{{ recipe.title }}</h1>
-        <p>recipe ID : {{ recipeId }}</p>
-        <img :src="recipe.image" class="center" />
+    <div v-if="recipe" class="recipe-container">
+      <div class="recipe-header">
+        <h1 class="recipe-title">{{ recipe.title }}</h1>
+        <p class="recipe-id">Recipe ID: {{ recipeId }}</p>
+        <img :src="recipe.image" class="recipe-image" />
       </div>
       <div class="recipe-body">
-        <div class="wrapper">
-          <div class="wrapped">
-            <div class="mb-3">
-              <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
-              <div>Likes: {{ recipe.aggregateLikes }} likes</div>
-            </div>
-            Ingredients:
-            <ul>
+        <div class="recipe-details">
+          <div class="detail-item">
+            <i class="fas fa-clock"></i>
+            <span>Ready in {{ recipe.readyInMinutes }} minutes</span>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-heart"></i>
+            <span>{{ recipe.aggregateLikes }} likes</span>
+          </div>
+        </div>
+        <div class="recipe-content">
+          <div class="ingredients">
+            <h3>Ingredients</h3>
+            <ul class="ingredient-list">
               <li
                 v-for="(r, index) in recipe.extendedIngredients"
                 :key="index + '_' + r.id"
@@ -23,9 +29,9 @@
               </li>
             </ul>
           </div>
-          <div class="wrapped">
-            Instructions:
-            <ol>
+          <div class="instructions">
+            <h3>Instructions</h3>
+            <ol class="instruction-list">
               <li v-for="s in recipe._instructions" :key="s.number">
                 {{ s.step }}
               </li>
@@ -33,11 +39,6 @@
           </div>
         </div>
       </div>
-      <!-- <pre>
-      {{ $route.params }}
-      {{ recipe }}
-    </pre
-      > -->
     </div>
   </div>
 </template>
@@ -113,19 +114,121 @@ export default {
 </script>
 
 <style scoped>
-.wrapper {
-  display: flex;
+.recipe-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #f8f8f8b3;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
 }
-.wrapped {
-  width: 50%;
-}
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-}
-/* .recipe-header{
 
-} */
+.recipe-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.recipe-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.recipe-id {
+  font-size: 1rem;
+  color: #666;
+}
+
+.recipe-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-details {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  margin: 0 1rem;
+}
+
+.detail-item i {
+  font-size: 1.2rem;
+  color: #666;
+  margin-right: 0.5rem;
+}
+
+.recipe-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ingredients,
+.instructions {
+  width: 48%;
+}
+
+.ingredient-list,
+.instruction-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.ingredient-list li,
+.instruction-list li {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.ingredient-list li::before {
+  content: "🍴 ";
+}
+
+.instruction-list li {
+  counter-increment: step-counter;
+  position: relative;
+  padding-left: 2rem;
+}
+
+.instruction-list li::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: #333;
+  color: #fff;
+  font-weight: bold;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .recipe-content {
+    flex-direction: column;
+  }
+
+  .ingredients,
+  .instructions {
+    width: 100%;
+  }
+}
 </style>

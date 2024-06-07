@@ -1,10 +1,20 @@
 <template>
   <div class="container">
-    <h1 class="title">Main Page</h1>
-    <RecipePreviewList title="Randome Recipes" class="RandomRecipes center" />
-    <router-link v-if="!$root.store.username" to="/login" tag="button"
-      >You need to Login to vue this</router-link
+    <h1 class="title">Omer's Culinary Oasis</h1>
+    <h5 class="sub-title">Explore a world of flavors</h5>
+    <RecipePreviewList
+      title="Explore this recipes"
+      class="RandomRecipes center"
+    />
+    <router-link
+      v-if="!$root.store.username"
+      to="/login"
+      tag="button"
+      class="login-btn"
     >
+      <span>Unlock More Deliciousness</span>
+      <i class="fas fa-sign-in-alt"></i>
+    </router-link>
 
     <RecipePreviewList
       title="Last Viewed Recipes"
@@ -41,7 +51,16 @@ export default {
 
   font-family: var(--font-family-sans);
 }
-
+.sub-title {
+  font-family: var(--font-family-sans);
+  color: var(--color-primary);
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 40px;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  border-top: 2px solid var(--color-primary);
+}
 .title {
   font-family: var(--font-family-serif);
   color: var(--color-primary);
@@ -58,7 +77,7 @@ export default {
   font-weight: 600;
   padding: 15px 30px;
   background-color: var(--color-accent);
-  color: #fff;
+  color: #454545;
   border: none;
   border-radius: 50px;
   cursor: pointer;
