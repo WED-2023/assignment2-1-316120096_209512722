@@ -5,12 +5,12 @@
       <router-link class="link" :to="{ name: 'main' }">Recipes</router-link>
       <router-link class="link" :to="{ name: 'about' }">About</router-link>
       <router-link class="link" :to="{ name: 'search' }">Search</router-link>
-      <router-link
-        class="link"
-        :to="{ name: 'create' }"
-        v-if="$root.store.username"
-        >New Recipe</router-link
-      >
+      <span class="user" v-if="$root.store.username">
+        <b-button @click="showModal = true">New Recipe</b-button>
+        <b-modal v-model="showModal" title="New Recipe">
+          <FormRecipe />
+        </b-modal>
+      </span>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
@@ -74,11 +74,43 @@
 </template>
 
 <script>
+import {
+  BNavbar,
+  BNavbarBrand,
+  BNavbarToggle,
+  BNavbarNav,
+  BNavForm,
+  BFormInput,
+  BButton,
+  BCollapse,
+  BNavItemDropdown,
+  BModal,
+} from "bootstrap-vue";
+import FormRecipe from "@/components/FormRecipe.vue";
+
 export default {
+  components: {
+    BNavbar,
+    BNavbarBrand,
+    BNavbarToggle,
+    BNavbarNav,
+    BNavForm,
+    BFormInput,
+    BButton,
+    BCollapse,
+    BNavItemDropdown,
+    BModal,
+    FormRecipe,
+  },
   props: {
     logout: {
       required: true,
     },
+  },
+  data() {
+    return {
+      showModal: false,
+    };
   },
   name: "NavBar",
 };
@@ -158,5 +190,8 @@ export default {
   background-color: #ee8a94; /* Bootstrap's danger color */
   border-color: #dc3545;
   font-weight: bold;
+}
+.modal-dialog {
+  max-width: 90%; /* Increase the size of the modal */
 }
 </style>
