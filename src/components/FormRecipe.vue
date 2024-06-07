@@ -35,7 +35,6 @@
                   <input
                     type="file"
                     id="image"
-                    ref="imageInput"
                     @change="selectImage"
                     class="custom-file-input"
                     required
@@ -170,7 +169,7 @@
             </div>
           </form>
           <div v-else class="alert alert-success">
-            Your recipe has been added!
+            Thank you for submitting your recipe!
           </div>
         </div>
       </div>
@@ -179,7 +178,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mockAddUserRecipes } from "../services/user.js";
 
 export default {
   data() {
@@ -198,25 +197,30 @@ export default {
   },
   methods: {
     selectImage(event) {
-      this.form.image = event.target.files[0];
+      if (event.target && event.target.files && event.target.files[0]) {
+        this.form.image = event.target.files[0];
+      }
     },
     async onSubmit() {
-      const formData = new FormData();
-      for (const key in this.form) {
-        if (Array.isArray(this.form[key])) {
-          for (let i = 0; i < this.form[key].length; i++) {
-            formData.append(`${key}[${i}]`, this.form[key][i]);
-          }
-        } else {
-          formData.append(key, this.form[key]);
-        }
-      }
       try {
-        await axios.post("/api/recipes", formData);
+        // Prepare form data
+        const formData = new FormData();
+        formData.append("title", this.form.title);
+        formData.append("image", this.form.image);
+        formData.append("description", this.form.description);
+        formData.append("readyInMinutes", this.form.readyInMinutes);
+        formData.append("instructions", JSON.stringify(this.form.instructions));
+        formData.append("ingredients", JSON.stringify(this.form.ingredients));
+
+        // Call the mock function
+        await mockAddUserRecipes(formData);
+
+        // Handle success
         this.success = true;
         this.resetForm();
       } catch (error) {
-        this.errors = error.response.data.errors;
+        // Handle errors
+        this.errors = error.response.data.errors || {};
       }
     },
     addInstruction() {
@@ -232,15 +236,14 @@ export default {
       this.form.ingredients.splice(index, 1);
     },
     resetForm() {
-      Object.assign(this.form, {
+      this.form = {
         title: "",
         image: "",
         description: "",
         readyInMinutes: "",
         instructions: [""],
         ingredients: [""],
-      });
-      this.$refs.imageInput.value = "";
+      };
       this.errors = {};
     },
   },
