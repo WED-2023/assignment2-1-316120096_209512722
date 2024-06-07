@@ -1,19 +1,30 @@
 <template>
   <router-link
     :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
-    class="recipe-preview"
+    class="recipe-item"
   >
-    <div class="recipe-body">
-      <img v-if="image_load" :src="recipe.image" class="recipe-image" />
+    <div class="recipe-image-container">
+      <img
+        v-if="image_load"
+        :src="recipe.image"
+        :alt="recipe.title"
+        class="recipe-image"
+        @error="onImageError"
+      />
+      <h3 class="image-title">{{ recipe.title }}</h3>
     </div>
-    <div class="recipe-footer">
-      <div :title="recipe.title" class="recipe-title">
-        {{ recipe.title }}
+    <div class="recipe-info">
+      <p>{{ recipe.summary | truncate(60) }}</p>
+      <div class="recipe-meta">
+        <span>
+          <i class="icon-clock"></i>
+          {{ recipe.readyInMinutes || "N/A" }} min 🕒
+        </span>
+        <span>
+          <i class="icon-likes"></i>
+          {{ recipe.aggregateLikes || "N/A" }} likes 🩵
+        </span>
       </div>
-      <ul class="recipe-overview">
-        <li>{{ recipe.readyInMinutes }} minutes</li>
-        <li>{{ recipe.aggregateLikes }} likes</li>
-      </ul>
     </div>
   </router-link>
 </template>
@@ -35,108 +46,105 @@ export default {
       type: Object,
       required: true,
     },
-
-    id: {
-      type: Number,
-      required: true,
+  },
+  methods: {
+    onImageError() {
+      this.image_load = false;
     },
-    title: {
-      type: String,
-      required: true,
-    },
-    readyInMinutes: {
-      type: Number,
-      required: true,
-    },
-    image: {
-      type: String,
-      required: true,
-    },
-    aggregateLikes: {
-      type: Number,
-      required: false,
-      default() {
-        return undefined;
-      },
+  },
+  filters: {
+    truncate(text, length, clamp = "...") {
+      return text && text.length > length
+        ? text.slice(0, length) + clamp
+        : text || "No description available";
     },
   },
 };
 </script>
 
 <style scoped>
-.recipe-preview {
-  display: inline-block;
-  width: 90%;
+.recipe-item {
+  width: 300px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.recipe-item:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+}
+
+.recipe-image-container {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.recipe-image {
+  width: 100%;
   height: 100%;
-  position: relative;
-  margin: 10px 10px;
-}
-.recipe-preview > .recipe-body {
-  width: 100%;
-  height: 150x;
-  position: relative;
+  object-fit: cover;
+  transition: transform 0.5s ease;
 }
 
-.recipe-preview .recipe-body .recipe-image {
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: auto;
-  margin-bottom: auto;
-  display: block;
-  max-width: 100%; /* Ensures the image doesn't exceed its container's width */
-  max-height: 100x; /* Set a maximum height for the image */
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  background-size: cover;
+.recipe-item:hover .recipe-image {
+  transform: scale(1.1);
 }
 
-.recipe-preview .recipe-footer {
+.image-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
   width: 100%;
-  height: 50%;
-  overflow: hidden;
-  color: rgb(118, 86, 59);
+  font-family: var(--font-family-serif);
+  font-size: 1.4rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 15px;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
 }
 
-.recipe-preview .recipe-footer .recipe-title {
-  padding: 10px 10px;
-  width: 100%;
-  font-size: 12pt;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  -o-text-overflow: ellipsis;
-  text-overflow: ellipsis;
+.recipe-item:hover .image-title {
+  transform: translateY(0);
 }
 
-.recipe-preview .recipe-footer ul.recipe-overview {
-  padding: 5px 10px;
-  width: 100%;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+.recipe-info {
+  padding: 20px;
+}
+
+.recipe-info p {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.recipe-meta {
   display: flex;
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -o-box-flex: 1;
-  box-flex: 1;
-  -webkit-flex: 1 auto;
-  -ms-flex: 1 auto;
-  flex: 1 auto;
-  table-layout: fixed;
-  margin-bottom: 0px;
+  justify-content: space-between;
+  color: var(--color-text-secondary);
+  font-size: 0.8rem;
 }
 
-.recipe-preview .recipe-footer ul.recipe-overview li {
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -o-box-flex: 1;
-  -ms-box-flex: 1;
-  box-flex: 1;
-  -webkit-flex-grow: 1;
-  flex-grow: 1;
-  width: 90px;
-  display: table-cell;
-  text-align: center;
+.recipe-meta span {
+  display: flex;
+  align-items: center;
+}
+
+.recipe-meta i {
+  margin-right: 5px;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .recipe-item {
+    width: 100%;
+  }
 }
 </style>

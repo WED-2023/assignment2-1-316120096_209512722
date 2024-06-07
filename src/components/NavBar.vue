@@ -138,14 +138,14 @@ export default {
 }
 .link {
   font-weight: bold;
-  color: #f5dcb1;
+  color: #cacaca;
   text-decoration: none;
   padding: 0.5rem 1rem;
   transition: background-color 0.3s ease;
   font-size: x-large;
 }
 .link:hover {
-  color: #dfd7c6; /* Change background color on hover */
+  color: #ffffff; /* Change background color on hover */
 }
 
 .search-button {

@@ -1,49 +1,28 @@
 <template>
-  <div>
-    <h1>Favorite Recipes 🩵</h1>
-    <div v-if="favorites.length > 0">
-      <div v-for="recipe in favorites" :key="recipe.id">
-        <recipe-preview :recipe="recipe" />
-      </div>
-    </div>
-    <div v-else>
-      <h2>No favorite recipes yet!</h2>
-    </div>
-  </div>
+  <GenericPage
+    pageName="Family Recipes Treasures 🏠👑"
+    :fetchData="fetchFavorites"
+    :newPageMessage="{
+      header: 'Welcome to the Family Recipe Treasures',
+      body:
+        'Delve into the heart of family traditions with our cherished recipes. Whether it\'s grandma\'s famous apple pie or dad\'s secret barbecue sauce, each dish tells a story. Start exploring and savor the memories!',
+    }"
+  />
 </template>
 
 <script>
-import RecipePreview from "@/components/RecipePreview.vue";
-import { mockGetFamilyRecipes } from "@/services/user";
+import GenericPage from "@/components/GenericPage.vue";
+import { mockGetFamilyRecipes } from "../../services/user";
 
 export default {
   name: "FavoritesPage",
   components: {
-    RecipePreview,
-  },
-  data() {
-    return {
-      favorites: [],
-    };
-  },
-  mounted() {
-    this.updateFavorites();
+    GenericPage,
   },
   methods: {
-    async updateFavorites() {
-      try {
-        const response = mockGetFamilyRecipes();
-        console.log("mockget:", response);
-        const recipes = response.data.recipes;
-        console.log("recipes:", recipes);
-        this.favorites = [];
-        this.favorites.push(...recipes);
-      } catch (error) {
-        console.log(error);
-      }
+    fetchFavorites() {
+      return mockGetFamilyRecipes();
     },
   },
 };
 </script>
-
-<style></style>
