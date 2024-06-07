@@ -19,3 +19,10 @@ export function mockGetRecipeFullDetails(recipeId) {
   }
   return { status: 200, data: {} };
 }
+export function mockGetAllRecipes(amount = recipe_full_view.length) {
+  let recipes = [];
+  for (let i = 0; i < amount; i++) {
+    recipes.push(...recipe_full_view);
+  }
+  return { data: { recipes: recipes } };
+}

@@ -59,10 +59,13 @@ export default {
     aggregateLikes: {
       type: Number,
       required: false,
-      default() {
-        return undefined;
-      },
     },
+
+    // TODO: add the rest of the props
+  },
+
+  default() {
+    return undefined;
   },
 };
 </script>
@@ -118,14 +121,11 @@ export default {
   text-align: center;
 }
 
-.recipe-title {
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
+.recipe-summary {
+  font-size: 16px;
+  color: #666;
   margin-bottom: 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  text-align: left;
 }
 
 .recipe-overview {
