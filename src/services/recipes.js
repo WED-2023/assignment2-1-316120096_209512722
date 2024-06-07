@@ -19,3 +19,39 @@ export function mockGetRecipeFullDetails(recipeId) {
   }
   return { status: 200, data: {} };
 }
+
+export function mockAddUserRecipes(recipeDetails) {
+  let userRecipes = []; // Define userRecipes array
+  const title = recipeDetails.get("title");
+  const image = recipeDetails.get("image");
+  const description = recipeDetails.get("description");
+  const readyInMinutes = recipeDetails.get("readyInMinutes");
+  const instructions = JSON.parse(recipeDetails.get("instructions"));
+  const ingredients = JSON.parse(recipeDetails.get("ingredients"));
+
+  // Generate a simple unique ID using timestamp and random number
+  const newRecipeId = Math.floor(1000 + Math.random() * 9000);
+
+  const newRecipe = {
+    id: newRecipeId,
+    title: title,
+    image: image, // Here, 'image' should be the URL/path where the image is stored
+    description: description,
+    readyInMinutes: parseInt(readyInMinutes),
+    instructions: instructions,
+    ingredients: ingredients,
+  };
+
+  userRecipes.push(newRecipe); // Push the new recipe to userRecipes array
+  console.log(userRecipes, "userRecipes");
+  return {
+    status: 200,
+    response: {
+      data: {
+        message: "The Recipe successfully added to My Recipes",
+        success: true,
+        recipeId: newRecipeId, // Optionally return the new recipe ID
+      },
+    },
+  };
+}

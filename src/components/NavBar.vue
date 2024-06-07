@@ -7,7 +7,7 @@
       <router-link class="link" :to="{ name: 'search' }">Search</router-link>
       <span class="user" v-if="$root.store.username">
         <b-button @click="showModal = true">New Recipe</b-button>
-        <b-modal v-model="showModal" title="New Recipe">
+        <b-modal v-model="showModal" title="New Recipe" size="xl">
           <FormRecipe />
         </b-modal>
       </span>

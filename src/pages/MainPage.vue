@@ -2,7 +2,10 @@
   <div class="container">
     <h1 class="title">Omer's Culinary Oasis</h1>
     <h5 class="sub-title">Explore a world of flavors</h5>
-    <RecipePreviewList title="Randome Recipes" class="RandomRecipes center" />
+    <RecipePreviewList
+      title="Explore this recipes"
+      class="RandomRecipes center"
+    />
     <router-link
       v-if="!$root.store.username"
       to="/login"
@@ -74,7 +77,7 @@ export default {
   font-weight: 600;
   padding: 15px 30px;
   background-color: var(--color-accent);
-  color: #fff;
+  color: #454545;
   border: none;
   border-radius: 50px;
   cursor: pointer;
