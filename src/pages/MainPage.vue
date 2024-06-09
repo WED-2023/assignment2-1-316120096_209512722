@@ -18,6 +18,7 @@
 
     <RecipePreviewList
       title="Last Viewed Recipes"
+      :userName="$root.store.username"
       :class="{
         RandomRecipes: true,
         blur: !$root.store.username,
