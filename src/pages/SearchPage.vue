@@ -1,4 +1,3 @@
-<!-- SearchPage.vue -->
 <template>
   <div class="container">
     <!-- Search Form -->
@@ -17,6 +16,66 @@
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="15">15</option>
+        </b-form-select>
+      </b-form-group>
+      <b-form-group label="Filter by" class="Filter-by">
+        <b-form-select v-model="filterBy">
+          <option value="">None</option>
+          <option value="vegetarian">Vegetarian</option>
+          <option value="vegan">Vegan</option>
+          <option value="gluten free">Gluten Free</option>
+          <!-- Add more diet options as needed -->
+        </b-form-select>
+      </b-form-group>
+      <b-form-group label="Cuisine Type" class="cuisine-type">
+        <b-form-select v-model="cuisineType">
+          <option value="">None</option>
+          <option value="African">African</option>
+          <option value="Asian">Asian</option>
+          <option value="American">American</option>
+          <option value="British">British</option>
+          <option value="Cajun">Cajun</option>
+          <option value="Caribbean">Caribbean</option>
+          <option value="Chinese">Chinese</option>
+          <option value="Eastern European">Eastern European</option>
+          <option value="European">European</option>
+          <option value="French">French</option>
+          <option value="German">German</option>
+          <option value="Greek">Greek</option>
+          <option value="Indian">Indian</option>
+          <option value="Irish">Irish</option>
+          <option value="Italian">Italian</option>
+          <option value="Japanese">Japanese</option>
+          <option value="Jewish">Jewish</option>
+          <option value="Korean">Korean</option>
+          <option value="Latin American">Latin American</option>
+          <option value="Mediterranean">Mediterranean</option>
+          <option value="Mexican">Mexican</option>
+          <option value="Middle Eastern">Middle Eastern</option>
+          <option value="Nordic">Nordic</option>
+          <option value="Southern">Southern</option>
+          <option value="Spanish">Spanish</option>
+          <option value="Thai">Thai</option>
+          <option value="Vietnamese">Vietnamese</option>
+        </b-form-select>
+      </b-form-group>
+      <b-form-group label="Meal Type" class="meal-type">
+        <b-form-select v-model="mealType">
+          <option value="">None</option>
+          <option value="main course">Main Course</option>
+          <option value="side dish">Side Dish</option>
+          <option value="dessert">Dessert</option>
+          <option value="appetizer">Appetizer</option>
+          <option value="salad">Salad</option>
+          <option value="bread">Bread</option>
+          <option value="breakfast">Breakfast</option>
+          <option value="soup">Soup</option>
+          <option value="beverage">Beverage</option>
+          <option value="sauce">Sauce</option>
+          <option value="marinade">Marinade</option>
+          <option value="fingerfood">Fingerfood</option>
+          <option value="snack">Snack</option>
+          <option value="drink">Drink</option>
         </b-form-select>
       </b-form-group>
       <b-form-group label="Sort by" class="sort-by">
@@ -43,9 +102,12 @@
 </template>
 
 <script>
-import { mockGetRecipesPreview } from "../services/recipes.js";
 import RecipeDetails from "../components/RecipeDetails.vue";
 import RecipePreview from "../components/RecipePreview.vue";
+
+const apiKey = "82d181759f064ccb9fb29c272c319613"; // Replace 'your_api_key' with your actual Spoonacular API key
+const endpoint = "https://api.spoonacular.com/recipes/complexSearch";
+
 export default {
   components: {
     RecipeDetails,
@@ -56,6 +118,7 @@ export default {
       searchQuery: "",
       filteredRecipes: [],
       resultsCount: 5, // default value
+      filterBy: "", // default filter option
       sortBy: "likes", // default sorting option
       loading: false,
     };
@@ -72,16 +135,34 @@ export default {
       this.loading = true;
 
       try {
-        const response = await mockGetRecipesPreview();
-        console.log(response);
-        if (response.data.recipes.length != 0) {
-          const recipes = response.data.recipes; // Assuming response.data.recipes is an array of recipe objects
+        // Define the parameters for your search
+        const params = {
+          apiKey: apiKey,
+          query: query,
+          diet: this.filterBy, // Only include if filterBy has a value
+          cuisine: this.cuisineType, // Only include if cuisineType has a value
+          type: this.mealType, // Only include if mealType has a value
+          number: this.resultsCount,
+        };
+
+        // Convert the params object to a URL query string
+        const queryString = new URLSearchParams(params).toString();
+
+        // Make the GET request to the API
+        const response = await fetch(`${endpoint}?${queryString}`);
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+        const data = await response.json();
+
+        if (data.results.length !== 0) {
+          const recipes = data.results; // Assuming data.results is an array of recipe objects
           const results = recipes.filter((recipe) =>
             recipe.title.toLowerCase().includes(query)
           );
           results.sort((a, b) => {
             if (this.sortBy === "likes") {
-              return b.aggregateLikes - a.ggregateLike;
+              return b.aggregateLikes - a.aggregateLikes;
             } else if (this.sortBy === "time") {
               return a.readyInMinutes - b.readyInMinutes;
             }
