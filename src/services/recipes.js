@@ -10,6 +10,32 @@ export function mockGetRecipesPreview(amount = 1) {
 
   return { data: { recipes: recipes } };
 }
+/**
+ * Get a random selection of recipe previews.
+ *
+ * @param {number} [amount=1] - The number of recipe previews to retrieve.
+ * @returns {Object} - An object containing an array of recipe previews.
+ */
+export function mockGetRecipesPreviewRandom(amount = 1) {
+  let recipes = [];
+  let usedIndices = [];
+
+  // Select random recipes from the array
+  for (let i = 0; i < amount; i++) {
+    // Generate a random index within the range of the recipe preview array
+    let randomIndex;
+    do {
+      randomIndex = Math.floor(Math.random() * recipe_preview.length);
+    } while (usedIndices.includes(randomIndex));
+
+    // Add the recipe at the random index to the recipes array
+    recipes.push(recipe_preview[randomIndex]);
+    usedIndices.push(randomIndex);
+  }
+
+  // Return an object containing the array of recipe previews
+  return { data: { recipes: recipes } };
+}
 
 export function mockGetRecipeFullDetails(recipeId) {
   for (let i = 0; i < recipe_full_view.length; i++) {
