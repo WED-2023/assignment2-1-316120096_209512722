@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <TitleForUs />
-    <h5 class="sub-title">Explore a world of flavors</h5>
+
     <b-button
       class="random-button"
       @click="handleButtonClick"
@@ -127,9 +127,8 @@ export default {
 }
 .random-button {
   position: relative;
-  top: 5%;
-  left: 10%;
-
+  bottom: -100px;
+  left: 100px;
   font-family: var(--font-family-sans);
   font-size: 1rem;
   font-weight: 600;

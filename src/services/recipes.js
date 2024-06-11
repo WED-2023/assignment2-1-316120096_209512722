@@ -81,3 +81,72 @@ export function mockAddUserRecipes(recipeDetails) {
     },
   };
 }
+
+export async function mocksearchRecipes({
+  query,
+  resultsCount,
+  sortBy,
+  filterBy,
+  cuisineType,
+  mealType,
+}) {
+  const searchQuery = query.trim().toLowerCase();
+  if (!searchQuery) {
+    return [];
+  }
+
+  try {
+    const response = await mockGetRecipesPreview();
+    console.log(response);
+    if (response.data.recipes.length !== 0) {
+      let recipes = response.data.recipes;
+
+      // Filter recipes by search query
+      recipes = recipes.filter((recipe) =>
+        recipe.title.toLowerCase().includes(searchQuery)
+      );
+
+      // Apply additional filters
+      if (filterBy) {
+        if (filterBy === "vegetarian") {
+          recipes = recipes.filter((recipe) => recipe.vegetarian);
+        } else if (filterBy === "vegan") {
+          recipes = recipes.filter((recipe) => recipe.vegan);
+        } else if (filterBy === "gluten free") {
+          recipes = recipes.filter((recipe) => recipe.glutenFree);
+        }
+      }
+
+      if (cuisineType) {
+        recipes = recipes.filter((recipe) =>
+          recipe.cuisines.includes(cuisineType)
+        );
+      }
+
+      // Filter by mealType (checks if mealType is in the list of meal types for each recipe)
+      if (mealType) {
+        recipes = recipes.filter((recipe) =>
+          recipe.mealTypes.includes(mealType)
+        );
+      }
+
+      // Sort recipes
+      recipes.sort((a, b) => {
+        if (sortBy === "likes") {
+          return b.aggregateLikes - a.aggregateLikes;
+        } else if (sortBy === "time") {
+          return a.readyInMinutes - b.readyInMinutes;
+        }
+      });
+
+      // Apply the resultsCount limit
+      return recipes.slice(0, resultsCount);
+    } else {
+      console.error("Recipes not found");
+      return [];
+    }
+  } catch (error) {
+    console.error("An error occurred while fetching the recipes:", error);
+    return [];
+  }
+}
