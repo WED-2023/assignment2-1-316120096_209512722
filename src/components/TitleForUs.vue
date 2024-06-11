@@ -1,10 +1,10 @@
 <template>
   <div class="title-container">
     <h1 :class="{ animated: mainTitleAnimated }" class="main-title">
-      Your Main Title
+      Welocme to a world of flavor
     </h1>
     <p :class="{ animated: subtitleAnimated }" class="subtitle">
-      Your Subtitle or Additional Information
+      Explore a world of flavors
     </p>
   </div>
 </template>

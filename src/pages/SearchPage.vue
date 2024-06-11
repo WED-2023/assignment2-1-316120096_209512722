@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- Search Form -->
-    <form @submit.prevent="searchRecipes" class="search-form">
+    <form @submit.prevent="searchRecipesHandler" class="search-form">
       <b-form-group label="Search" class="results-input">
         <input
           aria-label="Search"
@@ -102,11 +102,9 @@
 </template>
 
 <script>
+import { mocksearchRecipes } from "../services/recipes.js";
 import RecipeDetails from "../components/RecipeDetails.vue";
 import RecipePreview from "../components/RecipePreview.vue";
-
-const apiKey = "82d181759f064ccb9fb29c272c319613"; // Replace 'your_api_key' with your actual Spoonacular API key
-const endpoint = "https://api.spoonacular.com/recipes/complexSearch";
 
 export default {
   components: {
@@ -118,61 +116,25 @@ export default {
       searchQuery: "",
       filteredRecipes: [],
       resultsCount: 5, // default value
-      filterBy: "", // default filter option
       sortBy: "likes", // default sorting option
+      filterBy: "", // default filter by diet
+      cuisineType: "", // default cuisine type
+      mealType: "", // default meal type
       loading: false,
     };
   },
-
   methods: {
-    async searchRecipes() {
-      const query = this.searchQuery.trim().toLowerCase();
-      if (!query) {
-        this.filteredRecipes = [];
-        return;
-      }
-
+    async searchRecipesHandler() {
       this.loading = true;
-
       try {
-        // Define the parameters for your search
-        const params = {
-          apiKey: apiKey,
-          query: query,
-          diet: this.filterBy, // Only include if filterBy has a value
-          cuisine: this.cuisineType, // Only include if cuisineType has a value
-          type: this.mealType, // Only include if mealType has a value
-          number: this.resultsCount,
-        };
-
-        // Convert the params object to a URL query string
-        const queryString = new URLSearchParams(params).toString();
-
-        // Make the GET request to the API
-        const response = await fetch(`${endpoint}?${queryString}`);
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
-        }
-        const data = await response.json();
-
-        if (data.results.length !== 0) {
-          const recipes = data.results; // Assuming data.results is an array of recipe objects
-          const results = recipes.filter((recipe) =>
-            recipe.title.toLowerCase().includes(query)
-          );
-          results.sort((a, b) => {
-            if (this.sortBy === "likes") {
-              return b.aggregateLikes - a.aggregateLikes;
-            } else if (this.sortBy === "time") {
-              return a.readyInMinutes - b.readyInMinutes;
-            }
-          });
-
-          // Apply the resultsCount limit
-          this.filteredRecipes = results.slice(0, this.resultsCount);
-        } else {
-          console.error("Recipes not found");
-        }
+        this.filteredRecipes = await mocksearchRecipes({
+          query: this.searchQuery,
+          resultsCount: this.resultsCount,
+          sortBy: this.sortBy,
+          filterBy: this.filterBy,
+          cuisineType: this.cuisineType,
+          mealType: this.mealType,
+        });
       } catch (error) {
         console.error("An error occurred while fetching the recipes:", error);
       } finally {
