@@ -1,31 +1,42 @@
 <template>
   <div class="container">
-    <h1 class="title">Omer's Culinary Oasis</h1>
-    <h5 class="sub-title">Explore a world of flavors</h5>
-    <RecipePreviewList
-      title="Explore this recipes"
-      class="RandomRecipes center"
-    />
-    <router-link
-      v-if="!$root.store.username"
-      to="/login"
-      tag="button"
-      class="login-btn"
-    >
-      <span>Unlock More Deliciousness</span>
-      <i class="fas fa-sign-in-alt"></i>
-    </router-link>
+    <TitleForUs />
 
+    <b-button
+      class="random-button"
+      @click="handleButtonClick"
+      variant="primary"
+    >
+      Get Different Recipes
+    </b-button>
     <RecipePreviewList
-      title="Last Viewed Recipes"
-      :userName="$root.store.username"
-      :class="{
-        RandomRecipes: true,
-        blur: !$root.store.username,
-        center: true,
-      }"
-      disabled
-    ></RecipePreviewList>
+      ref="recipePreviewList"
+      title="Random Recipes"
+      @recipes-updated="handleRecipesUpdated"
+    />
+
+
+    <div class="last-viewed-recipes-wrapper">
+      <router-link
+        v-if="!$root.store.username"
+        to="/login"
+        tag="button"
+        class="login-btn"
+      >
+        <span>Unlock More Deliciousness</span>
+        <i class="fas fa-sign-in-alt"></i>
+      </router-link>
+      <RecipePreviewList
+        title="Last Viewed Recipes"
+        :class="{
+          RandomRecipes: true,
+          blur: !$root.store.username,
+          center: true,
+          disabled: !$root.store.username,
+        }"
+        disabled="true"
+      ></RecipePreviewList>
+    </div>
     <!-- <div
       style="position: absolute;top: 70%;left: 50%;transform: translate(-50%, -50%);"
     >
@@ -36,9 +47,19 @@
 
 <script>
 import RecipePreviewList from "../components/RecipePreviewList";
+import TitleForUs from "../components/TitleForUs.vue";
 export default {
   components: {
     RecipePreviewList,
+    TitleForUs,
+  },
+  methods: {
+    handleButtonClick() {
+      this.$refs.recipePreviewList.fetchDifferentRecipes(); // Call fetchDifferentRecipes method of RecipePreviewList component
+    },
+    handleRecipesUpdated() {
+      console.log("Recipes updated"); // Handle recipes updated event
+    },
   },
 };
 </script>
@@ -84,13 +105,15 @@ export default {
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
-  display: block;
-  margin: 0 auto 40px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
 }
 
 .login-btn:hover {
   background-color: #2980b9;
-  transform: scale(1.05);
   box-shadow: 0 6px 20px rgba(52, 152, 219, 0.6);
 }
 
@@ -102,6 +125,36 @@ export default {
 ::v-deep .blur .recipe-preview {
   pointer-events: none;
   cursor: default;
+}
+.random-button {
+  position: relative;
+  bottom: -100px;
+  left: 100px;
+  font-family: var(--font-family-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 15px 30px;
+  background-color: var(--color-accent);
+  color: #454545;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+}
+
+.random-button:hover {
+  background-color: #2980b9;
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.6);
+}
+
+.disabled {
+  pointer-events: none;
+}
+.last-viewed-recipes-wrapper {
+  position: relative;
+  text-align: center;
 }
 
 @media (max-width: 768px) {

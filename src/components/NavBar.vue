@@ -12,6 +12,11 @@
         </b-modal>
       </span>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <span class="user" v-if="$root.store.username">
+        <b-button @click="$router.push({ name: 'MealPlanning' })"
+          >🍽 ({{ mealCount }})</b-button
+        >
+      </span>
 
       <b-collapse id="nav-collapse" is-nav>
         <!-- Right aligned nav items -->
@@ -77,6 +82,7 @@ import {
   BModal,
 } from "bootstrap-vue";
 import FormRecipe from "@/components/FormRecipe.vue";
+import { getRecipeslen } from "../services/mealPlanning.js";
 
 export default {
   components: {
@@ -97,12 +103,23 @@ export default {
       required: true,
     },
   },
+  mounted() {
+    this.update();
+  },
   data() {
     return {
+      mealCount: getRecipeslen(),
+
       showModal: false,
     };
   },
   name: "NavBar",
+
+  methods: {
+    async update() {
+      this.mealCount = await getRecipeslen();
+    },
+  },
 };
 </script>
 

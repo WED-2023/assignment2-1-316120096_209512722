@@ -1,8 +1,7 @@
-<!-- SearchPage.vue -->
 <template>
   <div class="container">
     <!-- Search Form -->
-    <form @submit.prevent="searchRecipes" class="search-form">
+    <form @submit.prevent="searchRecipesHandler" class="search-form">
       <b-form-group label="Search" class="results-input">
         <input
           aria-label="Search"
@@ -17,6 +16,66 @@
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="15">15</option>
+        </b-form-select>
+      </b-form-group>
+      <b-form-group label="Filter by" class="Filter-by">
+        <b-form-select v-model="filterBy">
+          <option value="">None</option>
+          <option value="vegetarian">Vegetarian</option>
+          <option value="vegan">Vegan</option>
+          <option value="gluten free">Gluten Free</option>
+          <!-- Add more diet options as needed -->
+        </b-form-select>
+      </b-form-group>
+      <b-form-group label="Cuisine Type" class="cuisine-type">
+        <b-form-select v-model="cuisineType">
+          <option value="">None</option>
+          <option value="African">African</option>
+          <option value="Asian">Asian</option>
+          <option value="American">American</option>
+          <option value="British">British</option>
+          <option value="Cajun">Cajun</option>
+          <option value="Caribbean">Caribbean</option>
+          <option value="Chinese">Chinese</option>
+          <option value="Eastern European">Eastern European</option>
+          <option value="European">European</option>
+          <option value="French">French</option>
+          <option value="German">German</option>
+          <option value="Greek">Greek</option>
+          <option value="Indian">Indian</option>
+          <option value="Irish">Irish</option>
+          <option value="Italian">Italian</option>
+          <option value="Japanese">Japanese</option>
+          <option value="Jewish">Jewish</option>
+          <option value="Korean">Korean</option>
+          <option value="Latin American">Latin American</option>
+          <option value="Mediterranean">Mediterranean</option>
+          <option value="Mexican">Mexican</option>
+          <option value="Middle Eastern">Middle Eastern</option>
+          <option value="Nordic">Nordic</option>
+          <option value="Southern">Southern</option>
+          <option value="Spanish">Spanish</option>
+          <option value="Thai">Thai</option>
+          <option value="Vietnamese">Vietnamese</option>
+        </b-form-select>
+      </b-form-group>
+      <b-form-group label="Meal Type" class="meal-type">
+        <b-form-select v-model="mealType">
+          <option value="">None</option>
+          <option value="main course">Main Course</option>
+          <option value="side dish">Side Dish</option>
+          <option value="dessert">Dessert</option>
+          <option value="appetizer">Appetizer</option>
+          <option value="salad">Salad</option>
+          <option value="bread">Bread</option>
+          <option value="breakfast">Breakfast</option>
+          <option value="soup">Soup</option>
+          <option value="beverage">Beverage</option>
+          <option value="sauce">Sauce</option>
+          <option value="marinade">Marinade</option>
+          <option value="fingerfood">Fingerfood</option>
+          <option value="snack">Snack</option>
+          <option value="drink">Drink</option>
         </b-form-select>
       </b-form-group>
       <b-form-group label="Sort by" class="sort-by">
@@ -43,9 +102,10 @@
 </template>
 
 <script>
-import { mockGetRecipesPreview } from "../services/recipes.js";
+import { mocksearchRecipes } from "../services/recipes.js";
 import RecipeDetails from "../components/RecipeDetails.vue";
 import RecipePreview from "../components/RecipePreview.vue";
+
 export default {
   components: {
     RecipeDetails,
@@ -57,41 +117,24 @@ export default {
       filteredRecipes: [],
       resultsCount: 5, // default value
       sortBy: "likes", // default sorting option
+      filterBy: "", // default filter by diet
+      cuisineType: "", // default cuisine type
+      mealType: "", // default meal type
       loading: false,
     };
   },
-
   methods: {
-    async searchRecipes() {
-      const query = this.searchQuery.trim().toLowerCase();
-      if (!query) {
-        this.filteredRecipes = [];
-        return;
-      }
-
+    async searchRecipesHandler() {
       this.loading = true;
-
       try {
-        const response = await mockGetRecipesPreview();
-        console.log(response);
-        if (response.data.recipes.length != 0) {
-          const recipes = response.data.recipes; // Assuming response.data.recipes is an array of recipe objects
-          const results = recipes.filter((recipe) =>
-            recipe.title.toLowerCase().includes(query)
-          );
-          results.sort((a, b) => {
-            if (this.sortBy === "likes") {
-              return b.aggregateLikes - a.ggregateLike;
-            } else if (this.sortBy === "time") {
-              return a.readyInMinutes - b.readyInMinutes;
-            }
-          });
-
-          // Apply the resultsCount limit
-          this.filteredRecipes = results.slice(0, this.resultsCount);
-        } else {
-          console.error("Recipes not found");
-        }
+        this.filteredRecipes = await mocksearchRecipes({
+          query: this.searchQuery,
+          resultsCount: this.resultsCount,
+          sortBy: this.sortBy,
+          filterBy: this.filterBy,
+          cuisineType: this.cuisineType,
+          mealType: this.mealType,
+        });
       } catch (error) {
         console.error("An error occurred while fetching the recipes:", error);
       } finally {

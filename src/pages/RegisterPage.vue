@@ -233,7 +233,65 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
 .container {
-  max-width: 500px;
+  max-width: 400px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 200px auto;
+  position: relative;
+  font-family: "Roboto", sans-serif;
+  color: #333;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.login-button {
+  width: 100%;
+  display: block;
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s, border-color 0.3s;
+
+  &:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+  }
+}
+
+.b-form-group {
+  margin-bottom: 20px;
+}
+
+.b-form-invalid-feedback {
+  color: #dc3545;
+  font-size: 0.875rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.text-center {
+  text-align: center;
 }
 </style>
