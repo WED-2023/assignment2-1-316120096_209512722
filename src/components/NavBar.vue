@@ -22,7 +22,7 @@
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <span class="user" v-if="!$root.store.username">
-            <em class="guest">Guest</em>
+            <em class="guest">Hello Guest</em>
             <b-button
               class="my-2 my-sm-0 login-btn"
               @click="

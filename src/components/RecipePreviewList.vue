@@ -6,6 +6,7 @@
     </h3>
     <div class="recipe-list">
       <RecipePreview
+        :userName="userName || ''"
         v-for="r in recipes"
         :key="r.id"
         :recipe="r"
@@ -25,6 +26,10 @@ export default {
     RecipePreview,
   },
   props: {
+    userName: {
+      type: String,
+      required: true,
+    },
     title: {
       type: String,
       required: true,
