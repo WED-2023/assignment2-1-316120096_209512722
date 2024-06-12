@@ -15,6 +15,7 @@
       @recipes-updated="handleRecipesUpdated"
     />
 
+
     <div class="last-viewed-recipes-wrapper">
       <router-link
         v-if="!$root.store.username"
