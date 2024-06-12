@@ -57,6 +57,11 @@ const routes = [
     name: "MealPlanning",
     component: () => import("./pages/MealPlanningPage"),
   },
+  {
+    path: "/:MakeRecipeid",
+    name: "MakeRecipeid",
+    component: () => import("./pages/MakeRecipePage"),
+  },
 ];
 
 export default routes;

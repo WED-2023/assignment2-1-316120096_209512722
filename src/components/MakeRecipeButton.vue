@@ -1,12 +1,26 @@
 <template>
-  <button @click="navigateToRecipe">Make this recipe</button>
+  <button @click="navigateToRecipe">{{ buttonText }}</button>
 </template>
 
 <script>
 export default {
+  props: {
+    recipeId: {
+      type: String,
+      required: true,
+    },
+    buttonText: {
+      type: String,
+      default: "Make this recipe",
+    },
+  },
   methods: {
     navigateToRecipe() {
-      this.$router.push("/recipe");
+      let number = parseInt(this.recipeId);
+      this.$router.push({
+        name: "MakeRecipeid",
+        params: { recipeId: this.recipeId },
+      });
     },
   },
 };

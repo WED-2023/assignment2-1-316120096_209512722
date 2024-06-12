@@ -3,6 +3,7 @@
     <div v-if="recipe" class="recipe-container">
       <div class="recipe-header">
         <h1 class="recipe-title">{{ recipe.title }}</h1>
+        <RecipeButton :recipeId="recipeId" buttonText="Make this recipe" />
         <p class="recipe-id">Recipe ID: {{ recipeId }}</p>
         <img :src="recipe.image" class="recipe-image" />
       </div>
@@ -45,7 +46,11 @@
 
 <script>
 import { mockGetRecipeFullDetails } from "../services/recipes.js";
+import RecipeButton from "../components/MakeRecipeButton.vue";
 export default {
+  components: {
+    RecipeButton,
+  },
   data() {
     return {
       recipe: null,
