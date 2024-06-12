@@ -89,15 +89,16 @@
           The confirmed password is not equal to the original password
         </b-form-invalid-feedback>
       </b-form-group>
-
-      <b-button type="reset" variant="danger">Reset</b-button>
-      <b-button
-        type="submit"
-        variant="primary"
-        style="width:250px;"
-        class="ml-5 w-75"
-        >Register</b-button
-      >
+      <div class="buttons">
+        <b-button type="reset" variant="danger">Reset</b-button>
+        <b-button
+          type="submit"
+          variant="primary"
+          style="width:250px;"
+          class="ml-5 w-75"
+          >Register</b-button
+        >
+      </div>
       <div class="mt-2">
         You have an account already?
         <router-link to="login"> Log in here</router-link>
@@ -260,6 +261,10 @@ export default {
   text-align: center;
 }
 
+.buttons {
+  display: flex;
+  justify-content: center;
+}
 .login-button {
   width: 100%;
   display: block;

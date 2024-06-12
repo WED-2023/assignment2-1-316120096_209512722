@@ -1,11 +1,10 @@
 <template>
-  <div class="title-container">
-    <h1 :class="{ animated: mainTitleAnimated }" class="main-title">
-      Welocme to a world of flavor
-    </h1>
-    <p :class="{ animated: subtitleAnimated }" class="subtitle">
-      Explore a world of flavors
-    </p>
+  <div class="container">
+    <img
+      src="@/assets/images/logo-red.png"
+      alt="logo"
+      class="food-image mainTitleAnimated"
+    />
   </div>
 </template>
 
@@ -35,34 +34,45 @@ export default {
 </script>
 
 <style scoped>
-.title-container {
-  text-align: center;
-  background-color: rgba(255, 255, 255, 0.8); /* Transparent white background */
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  padding: 4px;
+  background-color: #ffffff7a;
 }
 
-.main-title {
-  font-size: 2.5em;
-  color: #333333; /* Dark neutral color */
-  margin: 0;
-  opacity: 0;
-  transform: translateY(-50px);
-  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+.food-image {
+  max-width: 100%;
+  width: 450px;
+  filter: drop-shadow(0 0 10px #ffffff);
+  transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
 }
 
-.subtitle {
-  font-size: 1.2em;
-  color: #228b22; /* Green color */
-  margin: 10px 0 0;
-  opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+.food-image:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 15px #ffffff);
 }
 
 .animated {
-  opacity: 1;
-  transform: translateY(0);
+  animation: fadeIn 1s ease forwards;
+}
+
+@media (max-width: 768px) {
+  .food-image {
+    width: 200px;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 </style>

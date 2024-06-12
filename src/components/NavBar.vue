@@ -1,7 +1,9 @@
 <template>
   <div>
     <b-navbar toggleable="lg" type="dark" variant="dark" id="omer">
-      <b-navbar-brand class="name" href="/">Omer's Kitchen 🥂 </b-navbar-brand>
+      <b-navbar-brand class="name" href="/"
+        ><img src="@/assets/images/navbarlogo.png" class="img-brand" />
+      </b-navbar-brand>
       <router-link class="link" :to="{ name: 'main' }">Recipes</router-link>
       <router-link class="link" :to="{ name: 'about' }">About</router-link>
       <router-link class="link" :to="{ name: 'search' }">Search</router-link>
@@ -124,6 +126,12 @@ export default {
 </script>
 
 <style scoped>
+.img-brand {
+  width: 80px;
+  height: 70px;
+  border-radius: 20%;
+  background-color: #ffffff00;
+}
 .user {
   display: flex;
   padding: 1rem;
