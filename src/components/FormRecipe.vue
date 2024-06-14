@@ -85,15 +85,37 @@
               class="add-recipe-input"
               v-model="form.instructions[index]"
               required
+              :disabled="
+                editingInstruction !== null && editingInstruction !== index
+              "
             />
+
+            <button
+              type="button"
+              class="btn btn-primary btn-sm ml-2"
+              @click="editInstruction(index)"
+              v-if="editingInstruction === null || editingInstruction === index"
+            >
+              {{ editingInstruction === index ? "Save" : "Edit" }}
+            </button>
             <button
               type="button"
               class="btn btn-danger btn-sm ml-2"
               @click="removeInstruction(index)"
+              v-if="editingInstruction !== index"
             >
               Remove
             </button>
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm ml-2"
+              @click="cancelEdit(index)"
+              v-if="editingInstruction === index"
+            >
+              Cancel
+            </button>
           </div>
+
           <button
             type="button"
             class="btn btn-secondary btn-sm mt-2"
@@ -101,6 +123,7 @@
           >
             Add Instruction
           </button>
+
           <small v-if="errors.instructions" class="text-danger">{{
             errors.instructions[0]
           }}</small>
@@ -117,15 +140,69 @@
             <input
               type="text"
               class="add-recipe-input"
-              v-model="form.ingredients[index]"
+              v-model="ingredient.name"
+              placeholder="Ingredient name"
               required
+              :disabled="
+                editingIngredient !== null && editingIngredient !== index
+              "
             />
+            <input
+              type="number"
+              class="add-recipe-input ml-2"
+              v-model="ingredient.amount"
+              placeholder="Amount"
+              required
+              :disabled="
+                editingIngredient !== null && editingIngredient !== index
+              "
+            />
+            <select
+              class="add-recipe-input ml-2"
+              v-model="ingredient.unit"
+              required
+              :disabled="
+                editingIngredient !== null && editingIngredient !== index
+              "
+            >
+              <option value="">Select unit</option>
+              <option value="tbsp">Tbsp</option>
+              <option value="cup">Cup</option>
+              <option value="g">Gram</option>
+              <option value="cloves">Cloves</option>
+              <option value="tsp">Teaspoon</option>
+              <option value="tbsp">Tablespoon</option>
+              <option value="mL">Milliliter</option>
+              <option value="l">Liter</option>
+              <option value="serv">Servings</option>
+              <option value="ml">Milligram</option>
+              <option value="kg">Kilogram</option>
+              <option value="pinch">Pinch</option>
+              <option value="oz">Ounce</option>
+            </select>
+            <button
+              type="button"
+              class="btn btn-primary btn-sm ml-2"
+              @click="editIngredient(index)"
+              v-if="editingIngredient === null || editingIngredient === index"
+            >
+              {{ editingIngredient === index ? "Save" : "Edit" }}
+            </button>
             <button
               type="button"
               class="btn btn-danger btn-sm ml-2"
               @click="removeIngredient(index)"
+              v-if="editingIngredient !== index"
             >
               Remove
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm ml-2"
+              @click="cancelEdit(index)"
+              v-if="editingIngredient === index"
+            >
+              Cancel
             </button>
           </div>
           <button
@@ -144,7 +221,7 @@
             type="submit"
             class="btn btn-primary btn-block add-recipe-btn"
           >
-            Add Recipe
+            {{ message }}
           </button>
         </div>
       </form>
@@ -161,16 +238,19 @@ import { mockAddUserRecipes } from "../services/recipes.js";
 export default {
   data() {
     return {
+      message: "Add Recipe",
       form: {
         title: "",
         image: "",
         description: "",
         readyInMinutes: "",
         instructions: [""],
-        ingredients: [""],
+        ingredients: [{ name: "", amount: "", unit: "" }],
       },
       errors: {},
       success: false,
+      editingInstruction: null,
+      editingIngredient: null,
     };
   },
   methods: {
@@ -181,6 +261,14 @@ export default {
     },
     async onSubmit() {
       try {
+        if (
+          this.form.ingredients.length === 0 ||
+          this.form.instructions.length === 0
+        ) {
+          this.message = "Please add ingredients and instructions";
+          return;
+        }
+
         const formData = new FormData();
         formData.append("title", this.form.title);
         formData.append("image", this.form.image);
@@ -199,15 +287,41 @@ export default {
     },
     addInstruction() {
       this.form.instructions.push("");
+      this.message = "Add Recipe";
     },
     removeInstruction(index) {
-      this.form.instructions.splice(index, 1);
+      if (this.form.instructions.length >= 1)
+        this.form.instructions.splice(index, 1);
+    },
+    editInstruction(index) {
+      if (this.editingInstruction === null) {
+        this.editingInstruction = index;
+      } else {
+        this.editingInstruction = null;
+      }
     },
     addIngredient() {
-      this.form.ingredients.push("");
+      this.form.ingredients.push({ name: "", amount: "", unit: "" });
+      this.message = "Add Recipe";
     },
     removeIngredient(index) {
-      this.form.ingredients.splice(index, 1);
+      if (this.form.ingredients.length >= 1) {
+        this.form.ingredients.splice(index, 1);
+      }
+    },
+    editIngredient(index) {
+      if (this.editingIngredient === null) {
+        this.editingIngredient = index;
+      } else {
+        this.editingIngredient = null;
+      }
+    },
+    cancelEdit(index) {
+      if (this.editingInstruction === index) {
+        this.editingInstruction = null;
+      } else if (this.editingIngredient === index) {
+        this.editingIngredient = null;
+      }
     },
     resetForm() {
       this.form = {
@@ -216,9 +330,11 @@ export default {
         description: "",
         readyInMinutes: "",
         instructions: [""],
-        ingredients: [""],
+        ingredients: [{ name: "", amount: "", unit: "" }],
       };
       this.errors = {};
+      this.editingInstruction = null;
+      this.editingIngredient = null;
     },
   },
 };
@@ -310,7 +426,9 @@ label {
   background-color: #dc3545;
   border-color: #dc3545;
 }
-
+.text-warning {
+  color: #ffc107;
+}
 .btn-danger:hover {
   background-color: #c82333;
   border-color: #bd2130;

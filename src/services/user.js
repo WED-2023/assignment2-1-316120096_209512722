@@ -2,7 +2,7 @@
 import e from "cors";
 import recipe_full_view from "../assets/mocks/recipe_full_view.json";
 import recipe_preview from "../assets/mocks/recipe_preview.json";
-
+import family_recipes_preview from "../assets/mocks/family_recipes_preview.json";
 let favortieRecipes = [
   {
     id: 716429,
@@ -45,7 +45,7 @@ let favortieRecipes = [
   },
 ];
 let userRecipes = [...recipe_preview];
-let familyRecipes = [...recipe_preview];
+let familyRecipes = [...family_recipes_preview];
 let watchedRecipes = [...recipe_preview];
 
 export function mockGetWatchedRecipes(userName) {

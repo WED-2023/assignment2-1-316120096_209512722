@@ -1,0 +1,47 @@
+[
+  {
+    "id": 101430,
+    "image": "https://easyweeknightrecipes.com/wp-content/uploads/2021/06/ChocolateCake-23.jpg",
+    "title": "Chocolate Cake",
+    "readyInMinutes": 60,
+    "aggregateLikes": 500,
+    "vegetarian": true,
+    "vegan": false,
+    "glutenFree": false,
+    "summary": "This Chocolate Cake is rich and moist. This recipe serves 12 and contains <b>350 calories</b>, <b>5g of protein</b>, and <b>15g of fat</b> per serving. For <b>$1.50 per serving</b>, this recipe <b>covers 8%</b> of your daily requirements of vitamins and minerals. This dessert takes approximately <b>60 minutes</b> to prepare and cook. 500 people have tried and liked this recipe. It is brought to you by delicious.com."
+  },
+
+  {
+    "id": 404341,
+    "image": "https://greenhealthycooking.com/wp-content/uploads/2021/09/Easy-Quinoa-Salad_.jpg",
+    "title": "Quinoa Salad",
+    "readyInMinutes": 20,
+    "aggregateLikes": 180,
+    "vegetarian": true,
+    "vegan": true,
+    "glutenFree": true,
+    "summary": "This Quinoa Salad is a refreshing and healthy meal. This recipe serves 4 and contains <b>150 calories</b>, <b>5g of protein</b>, and <b>5g of fat</b> per serving. For <b>$2.50 per serving</b>, this recipe <b>covers 15%</b> of your daily requirements of vitamins and minerals. This side dish takes approximately <b>20 minutes</b> to prepare and cook. 180 people have tried and liked this recipe. It is brought to you by allrecipes.com."
+  },
+  {
+    "id": 727430,
+    "image": "https://sugargeekshow.com/wp-content/uploads/2019/10/lemon-blueberry-muffin-recipe-featured.jpg",
+    "title": "Blueberry Muffins",
+    "readyInMinutes": 45,
+    "aggregateLikes": 210,
+    "vegetarian": true,
+    "vegan": false,
+    "glutenFree": false,
+    "summary": "Blueberry Muffins are a delightful breakfast treat. This recipe serves 12 and contains <b>200 calories</b>, <b>4g of protein</b>, and <b>8g of fat</b> per serving. For <b>$0.75 per serving</b>, this recipe <b>covers 8%</b> of your daily requirements of vitamins and minerals. This dessert takes approximately <b>45 minutes</b> to prepare and cook. 210 people have tried and liked this recipe. It is brought to you by allrecipes.com."
+  },
+  {
+    "id": 732120,
+    "image": "https://rotteml.com/wp-content/uploads/2023/05/WhatsApp-Image-2023-05-28-at-09.02.10-e1685254351958.jpeg",
+    "title": "Chicken Schnitzel",
+    "readyInMinutes": 40,
+    "aggregateLikes": 190,
+    "vegetarian": false,
+    "vegan": false,
+    "glutenFree": false,
+    "summary": "Chicken Schnitzel is a popular main course. This recipe serves 4 and contains <b>480 calories</b>, <b>28g of protein</b>, and <b>22g of fat</b> per serving. For <b>$3.00 per serving</b>, this recipe <b>covers 20%</b> of your daily requirements of vitamins and minerals. This dish takes approximately <b>40 minutes</b> to prepare and cook. 190 people have tried and liked this recipe. It is brought to you by seriouseats.com."
+  }
+]
