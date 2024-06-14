@@ -1,44 +1,51 @@
 <template>
   <div class="meal-planning-container">
-    <div class="meal-planning-title text-center my-3">
-      <h1 class="display-6">Meal Planning</h1>
-    </div>
-    <div class="progress my-4">
+    <!-- Existing HTML code -->
+    <draggable v-model="recipes" class="recipe-list" @end="onDragEnd">
       <div
-        class="progress-bar progress-bar-striped progress-bar-animated"
-        role="progressbar"
-        :style="{ width: progressBarWidth + '%' }"
-        aria-valuemin="0"
-        aria-valuemax="100"
+        v-for="(recipe, index) in recipes"
+        :key="recipe.id"
+        class="recipe-item"
       >
-        {{ progressBarWidth }}%
+        <!-- Existing recipe item structure -->
+        <div class="recipe-header">
+          <h2>{{ "Recipe " + (index + 1) }}</h2>
+          <button class="remove-button" @click="removeRecipe(index)">
+            &times;
+          </button>
+        </div>
+        <RecipePreview :recipe="recipe" />
+        <label class="checkbox-container">
+          <input
+            type="checkbox"
+            :checked="recipe.done"
+            @click="toggleDone(recipe)"
+          />
+          <span class="checkmark"></span>
+          Done
+        </label>
+
+        <!-- Progress bar -->
+        <div class="recipe-progress">
+          <div class="progress">
+            <div
+              class="progress-bar"
+              :style="{ width: recipe.progress + '%' }"
+              :aria-valuenow="recipe.progress"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              {{ recipe.progress }}%
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </draggable>
+
+    <!-- Remove all button -->
     <button class="remove-all-button" @click="removeAllRecipes">
       Remove All Recipes
     </button>
-    <div
-      v-for="(recipe, index) in recipes"
-      :key="recipe.id"
-      class="recipe-item"
-    >
-      <div class="recipe-header">
-        <h2>{{ "Recipe " + (index + 1) }}</h2>
-        <button class="remove-button" @click="removeRecipe(index)">
-          &times;
-        </button>
-      </div>
-      <RecipePreview :recipe="recipe" />
-      <label class="checkbox-container">
-        <input
-          type="checkbox"
-          :checked="recipe.done"
-          @click="toggleDone(recipe)"
-        />
-        <span class="checkmark"></span>
-        Done
-      </label>
-    </div>
   </div>
 </template>
 
@@ -47,13 +54,16 @@ import {
   mockGetmealPlanninglists,
   removemealPlanninglist,
   mockRemoveAllMeals,
+  mockchangeorder,
 } from "../services/mealPlanning.js";
 import RecipePreview from "../components/RecipePreview.vue";
+import draggable from "vuedraggable";
 
 export default {
   name: "MealPage",
   components: {
     RecipePreview,
+    draggable,
   },
   data() {
     return {
@@ -64,16 +74,10 @@ export default {
     this.recipes = (await mockGetmealPlanninglists()).response.data.recipes.map(
       (recipe) => ({
         ...recipe,
-        done: false, // Assuming initially no recipes are marked as done
+        done: false, // Initially no recipes are marked as done
+        progress: 0, // Initialize progress to 0%
       })
     );
-  },
-  computed: {
-    progressBarWidth() {
-      const doneRecipes = this.recipes.filter((recipe) => recipe.done).length;
-      const totalRecipes = this.recipes.length;
-      return totalRecipes === 0 ? 0 : (doneRecipes / totalRecipes) * 100;
-    },
   },
   methods: {
     removeRecipe(index) {
@@ -88,6 +92,15 @@ export default {
       this.recipes = [];
       mockRemoveAllMeals();
     },
+    onDragEnd(event) {
+      mockchangeorder(this.recipes);
+    },
+    updateProgress(recipeId, newProgress) {
+      const recipe = this.recipes.find((r) => r.id === recipeId);
+      if (recipe) {
+        recipe.progress = mockGetReecipePrecntag(recipe);
+      }
+    },
   },
 };
 </script>
@@ -97,7 +110,7 @@ export default {
   background-color: rgba(255, 255, 255, 0.95);
   padding: 20px;
   border-radius: 20px;
-  max-width: 450px;
+  max-width: 800px; /* Adjust the max-width to your desired width */
   margin: 0 auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -214,6 +227,14 @@ export default {
 
 .remove-all-button:hover {
   background-color: #c82333;
+}
+.progress-bar {
+  background-color: #007bff; /* Choose your desired progress bar color */
+  height: 100%;
+  color: white;
+  text-align: center;
+  line-height: 1.5;
+  border-radius: 10px;
 }
 
 @keyframes checkmark-expand {
