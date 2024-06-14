@@ -1,8 +1,13 @@
 import recipe_full_view from "../assets/mocks/recipe_full_view.json";
 import recipe_preview from "../assets/mocks/recipe_preview.json";
 import { mockGetRecipesPreview } from "./recipes.js";
+import GetAnalyzedRecipeInstructions from "../assets/mocks/GetAnalyzedRecipeInstructions.json";
+import GetRecipeInformation from "../assets/mocks/GetRecipeInformation.json";
 import axios from "axios";
 let mealPlanninglist = [...recipe_preview];
+let recipeInstructions = GetAnalyzedRecipeInstructions;
+let recipeFullInfo = GetRecipeInformation;
+let reciPoggres = 0;
 
 export function mockGetmealPlanninglists() {
   return {
@@ -29,6 +34,7 @@ export function mockAddRecipe(recipeDetails) {
     },
   };
 }
+
 export async function removemealPlanninglist(recipeId) {
   mealPlanninglist = mealPlanninglist.filter(
     (recipe) => recipe.id !== recipeId
@@ -39,28 +45,25 @@ export function mockRemoveAllMeals() {
   mealPlanninglist = [];
   console.log(mealPlanninglist.length);
 }
+
 export async function mockgetRecipeInstructions(recipeId) {
-  const url = `https://api.spoonacular.com/recipes/324694/analyzedInstructions`;
-  try {
-    const response = await axios.get(url, {
-      params: {
-        apiKey: "82d181759f064ccb9fb29c272c319613",
-      },
-    });
-    if (response.status === 200) {
-      const data = response.data;
-      // Assuming the response contains a list of instructions
-      const instructions =
-        data.length > 0 ? data[0].steps.map((step) => step.step) : [];
-      return instructions;
-    } else {
-      console.error(
-        `Failed to fetch recipe instructions: ${response.statusText}`
-      );
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching recipe instructions:", error.message);
-    return null;
-  }
+  return recipeInstructions[0].steps;
+}
+
+export async function mockGetRecipeInfo() {
+  let recipe = recipeFullInfo;
+  return {
+    id: recipe.id,
+    title: recipe.title,
+    image: recipe.image,
+    servings: recipe.servings,
+    readyInMinutes: recipe.readyInMinutes,
+    ingredients: recipe.extendedIngredients.map((ingredient) => ({
+      id: ingredient.id,
+      name: ingredient.name,
+      amount: ingredient.amount,
+      unit: ingredient.unit,
+    })),
+    summary: recipe.summary,
+  };
 }

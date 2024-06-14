@@ -1,4 +1,4 @@
-<template>
+<<template>
   <div class="meal-planning-container">
     <div class="meal-planning-title text-center my-3">
       <h1 class="display-6">Meal Planning</h1>
@@ -17,28 +17,30 @@
     <button class="remove-all-button" @click="removeAllRecipes">
       Remove All Recipes
     </button>
-    <div
-      v-for="(recipe, index) in recipes"
-      :key="recipe.id"
-      class="recipe-item"
-    >
-      <div class="recipe-header">
-        <h2>{{ "Recipe " + (index + 1) }}</h2>
-        <button class="remove-button" @click="removeRecipe(index)">
-          &times;
-        </button>
+    <draggable v-model="recipes" class="recipe-list" @end="onDragEnd">
+      <div
+        v-for="(recipe, index) in recipes"
+        :key="recipe.id"
+        class="recipe-item"
+      >
+        <div class="recipe-header">
+          <h2>{{ "Recipe " + (index + 1) }}</h2>
+          <button class="remove-button" @click="removeRecipe(index)">
+            &times;
+          </button>
+        </div>
+        <RecipePreview :recipe="recipe" />
+        <label class="checkbox-container">
+          <input
+            type="checkbox"
+            :checked="recipe.done"
+            @click="toggleDone(recipe)"
+          />
+          <span class="checkmark"></span>
+          Done
+        </label>
       </div>
-      <RecipePreview :recipe="recipe" />
-      <label class="checkbox-container">
-        <input
-          type="checkbox"
-          :checked="recipe.done"
-          @click="toggleDone(recipe)"
-        />
-        <span class="checkmark"></span>
-        Done
-      </label>
-    </div>
+    </draggable>
   </div>
 </template>
 
@@ -49,11 +51,13 @@ import {
   mockRemoveAllMeals,
 } from "../services/mealPlanning.js";
 import RecipePreview from "../components/RecipePreview.vue";
+import draggable from "vuedraggable";
 
 export default {
   name: "MealPage",
   components: {
     RecipePreview,
+    draggable,
   },
   data() {
     return {
@@ -88,16 +92,25 @@ export default {
       this.recipes = [];
       mockRemoveAllMeals();
     },
+    onDragEnd(event) {
+      // Handle recipe reorder after drag and drop
+      // event will contain the updated order of recipes
+      // Here, you might want to update backend if needed
+    },
   },
 };
 </script>
+
+<style scoped>
+/* Styles remain the same */
+</style>
 
 <style scoped>
 .meal-planning-container {
   background-color: rgba(255, 255, 255, 0.95);
   padding: 20px;
   border-radius: 20px;
-  max-width: 450px;
+  max-width: 800px; /* Adjust the max-width to your desired width */
   margin: 0 auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
