@@ -39,6 +39,21 @@
           <span class="checkmark"></span>
           Done
         </label>
+
+        <!-- Progress bar for the recipe -->
+        <div class="recipe-progress">
+          <div class="progress">
+            <div
+              class="progress-bar"
+              role="progressbar"
+              :style="{ width: getRecipeProgress(index) + '%' }"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              {{ getRecipeProgress(index) }}%
+            </div>
+          </div>
+        </div>
       </div>
     </draggable>
   </div>
@@ -96,6 +111,12 @@ export default {
       // Handle recipe reorder after drag and drop
       // event will contain the updated order of recipes
       // Here, you might want to update backend if needed
+    },
+    getRecipeProgress(index) {
+      // Mock function to get progress based on index
+      // Replace this with actual logic to get progress for each recipe
+      // For now, returning a random number between 0 and 100
+      return Math.floor(Math.random() * 100); // Example mock progress
     },
   },
 };
@@ -227,6 +248,17 @@ export default {
 
 .remove-all-button:hover {
   background-color: #c82333;
+}
+.recipe-progress {
+  margin-top: 10px;
+}
+
+.progress {
+  height: 20px;
+}
+
+.progress-bar {
+  background-color: #007bff; /* Blue progress bar */
 }
 
 @keyframes checkmark-expand {
