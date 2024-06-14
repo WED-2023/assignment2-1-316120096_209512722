@@ -4,10 +4,18 @@ import { mockGetRecipesPreview } from "./recipes.js";
 import GetAnalyzedRecipeInstructions from "../assets/mocks/GetAnalyzedRecipeInstructions.json";
 import GetRecipeInformation from "../assets/mocks/GetRecipeInformation.json";
 import axios from "axios";
-let mealPlanninglist = [...recipe_preview];
-let recipeInstructions = GetAnalyzedRecipeInstructions;
-let recipeFullInfo = GetRecipeInformation;
-let reciPoggres = 0;
+const mealPlanninglist = [...recipe_preview];
+const recipeInstructions = GetAnalyzedRecipeInstructions;
+const recipeFullInfo = GetRecipeInformation;
+const reciPoggres = 0;
+let myMap = {};
+for (let key in mealPlanninglist) {
+  myMap[mealPlanninglist[key].id] = 10;
+}
+
+export function mockGetReecipePrecntag(recipe) {
+  return myMap[recipe.id];
+}
 
 export function mockGetmealPlanninglists() {
   return {
@@ -28,7 +36,7 @@ export function mockAddRecipe(recipeDetails) {
     status: 200,
     response: {
       data: {
-        message: "The Recipe successfully added to Family Recipes",
+        message: "The Recipe successfully added to My meals",
         success: true,
       },
     },
@@ -66,4 +74,8 @@ export async function mockGetRecipeInfo() {
     })),
     summary: recipe.summary,
   };
+}
+
+export async function mockchangeorder(recipeLsit) {
+  mealPlanninglist = recipeLsit;
 }

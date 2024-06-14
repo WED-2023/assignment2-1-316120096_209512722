@@ -1,28 +1,13 @@
-<<template>
+<template>
   <div class="meal-planning-container">
-    <div class="meal-planning-title text-center my-3">
-      <h1 class="display-6">Meal Planning</h1>
-    </div>
-    <div class="progress my-4">
-      <div
-        class="progress-bar progress-bar-striped progress-bar-animated"
-        role="progressbar"
-        :style="{ width: progressBarWidth + '%' }"
-        aria-valuemin="0"
-        aria-valuemax="100"
-      >
-        {{ progressBarWidth }}%
-      </div>
-    </div>
-    <button class="remove-all-button" @click="removeAllRecipes">
-      Remove All Recipes
-    </button>
+    <!-- Existing HTML code -->
     <draggable v-model="recipes" class="recipe-list" @end="onDragEnd">
       <div
         v-for="(recipe, index) in recipes"
         :key="recipe.id"
         class="recipe-item"
       >
+        <!-- Existing recipe item structure -->
         <div class="recipe-header">
           <h2>{{ "Recipe " + (index + 1) }}</h2>
           <button class="remove-button" @click="removeRecipe(index)">
@@ -40,22 +25,27 @@
           Done
         </label>
 
-        <!-- Progress bar for the recipe -->
+        <!-- Progress bar -->
         <div class="recipe-progress">
           <div class="progress">
             <div
               class="progress-bar"
-              role="progressbar"
-              :style="{ width: getRecipeProgress(index) + '%' }"
+              :style="{ width: recipe.progress + '%' }"
+              :aria-valuenow="recipe.progress"
               aria-valuemin="0"
               aria-valuemax="100"
             >
-              {{ getRecipeProgress(index) }}%
+              {{ recipe.progress }}%
             </div>
           </div>
         </div>
       </div>
     </draggable>
+
+    <!-- Remove all button -->
+    <button class="remove-all-button" @click="removeAllRecipes">
+      Remove All Recipes
+    </button>
   </div>
 </template>
 
@@ -64,6 +54,7 @@ import {
   mockGetmealPlanninglists,
   removemealPlanninglist,
   mockRemoveAllMeals,
+  mockchangeorder,
 } from "../services/mealPlanning.js";
 import RecipePreview from "../components/RecipePreview.vue";
 import draggable from "vuedraggable";
@@ -83,16 +74,10 @@ export default {
     this.recipes = (await mockGetmealPlanninglists()).response.data.recipes.map(
       (recipe) => ({
         ...recipe,
-        done: false, // Assuming initially no recipes are marked as done
+        done: false, // Initially no recipes are marked as done
+        progress: 0, // Initialize progress to 0%
       })
     );
-  },
-  computed: {
-    progressBarWidth() {
-      const doneRecipes = this.recipes.filter((recipe) => recipe.done).length;
-      const totalRecipes = this.recipes.length;
-      return totalRecipes === 0 ? 0 : (doneRecipes / totalRecipes) * 100;
-    },
   },
   methods: {
     removeRecipe(index) {
@@ -108,23 +93,17 @@ export default {
       mockRemoveAllMeals();
     },
     onDragEnd(event) {
-      // Handle recipe reorder after drag and drop
-      // event will contain the updated order of recipes
-      // Here, you might want to update backend if needed
+      mockchangeorder(this.recipes);
     },
-    getRecipeProgress(index) {
-      // Mock function to get progress based on index
-      // Replace this with actual logic to get progress for each recipe
-      // For now, returning a random number between 0 and 100
-      return Math.floor(Math.random() * 100); // Example mock progress
+    updateProgress(recipeId, newProgress) {
+      const recipe = this.recipes.find((r) => r.id === recipeId);
+      if (recipe) {
+        recipe.progress = mockGetReecipePrecntag(recipe);
+      }
     },
   },
 };
 </script>
-
-<style scoped>
-/* Styles remain the same */
-</style>
 
 <style scoped>
 .meal-planning-container {
@@ -249,16 +228,13 @@ export default {
 .remove-all-button:hover {
   background-color: #c82333;
 }
-.recipe-progress {
-  margin-top: 10px;
-}
-
-.progress {
-  height: 20px;
-}
-
 .progress-bar {
-  background-color: #007bff; /* Blue progress bar */
+  background-color: #007bff; /* Choose your desired progress bar color */
+  height: 100%;
+  color: white;
+  text-align: center;
+  line-height: 1.5;
+  border-radius: 10px;
 }
 
 @keyframes checkmark-expand {
