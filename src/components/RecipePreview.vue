@@ -272,11 +272,14 @@ export default {
       this.fetchWatchedRecipes();
     },
     addFavoriteRecipe: async function(recipeId) {
-      alert("addFavoriteRecipe for user", this.userName);
+      console.log("userName", this.$root.store.username);
+      alert(
+        `addFavoriteRecipe for user ${this.$root.store.username} and recipeId ${recipeId}`
+      );
       if (recipeId && this.favoriteRecipes.includes(recipeId)) {
         return;
       }
-      await mockAddFavorite(this.$root.store.username, recipeId);
+      await mockAddFavorite(this.$store.username, recipeId);
       await this.fetchFavoriteRecipes();
     },
     onImageError() {

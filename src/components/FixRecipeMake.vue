@@ -95,7 +95,7 @@ export default {
 }
 
 .recipe-card-content:hover {
-  transform: rotateY(15deg) translateY(-5px) scale(1.05); /* Improved 3D rotation and scaling */
+  transform: rotateY(4deg) translateY(-4px) scale(1.02); /* Improved 3D rotation and scaling */
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); /* Deepening shadow */
 }
 

@@ -5,7 +5,9 @@
         <h1 class="recipe-title">{{ recipe.title }}</h1>
         <RecipeButton :recipeId="recipeId" buttonText="Make this recipe" />
         <p class="recipe-id">Recipe ID: {{ recipeId }}</p>
-        <img :src="recipe.image" class="recipe-image" />
+        <div class="img-container">
+          <img :src="recipe.image" class="recipe-image" />
+        </div>
       </div>
       <div class="recipe-body">
         <div class="recipe-details">
@@ -119,6 +121,12 @@ export default {
 </script>
 
 <style scoped>
+.img-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 75%;
+  overflow: hidden;
+}
 .recipe-container {
   max-width: 800px;
   margin: 0 auto;
@@ -146,8 +154,15 @@ export default {
 }
 
 .recipe-image {
-  max-width: 100%;
-  height: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
   border-radius: 15px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
