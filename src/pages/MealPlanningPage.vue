@@ -236,13 +236,4 @@ export default {
   line-height: 1.5;
   border-radius: 10px;
 }
-
-@keyframes checkmark-expand {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
 </style>
