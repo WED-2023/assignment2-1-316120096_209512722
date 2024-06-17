@@ -55,6 +55,7 @@ import {
   removemealPlanninglist,
   mockRemoveAllMeals,
   mockchangeorder,
+  mockGetReecipePrecntag,
 } from "../services/mealPlanning.js";
 import RecipePreview from "../components/RecipePreview.vue";
 import draggable from "vuedraggable";
@@ -71,18 +72,18 @@ export default {
     };
   },
   async created() {
-    this.recipes = (await mockGetmealPlanninglists()).response.data.recipes.map(
-      (recipe) => ({
-        ...recipe,
-        done: false, // Initially no recipes are marked as done
-        progress: 0, // Initialize progress to 0%
-      })
-    );
+    this.recipes = (
+      await mockGetmealPlanninglists(this.$root.store.username)
+    ).response.data.recipes.map((recipe) => ({
+      ...recipe,
+      done: false, // Initially no recipes are marked as done
+      progress: mockGetReecipePrecntag(recipe, this.$root.store.username), // Initialize progress to 0%
+    }));
   },
   methods: {
     removeRecipe(index) {
       const removedRecipe = this.recipes.splice(index, 1)[0];
-      removemealPlanninglist(removedRecipe.id);
+      removemealPlanninglist(removedRecipe.id, this.$root.store.username);
     },
     toggleDone(recipe) {
       const index = this.recipes.indexOf(recipe);
@@ -90,15 +91,18 @@ export default {
     },
     removeAllRecipes() {
       this.recipes = [];
-      mockRemoveAllMeals();
+      mockRemoveAllMeals(this.$root.store.username);
     },
     onDragEnd(event) {
-      mockchangeorder(this.recipes);
+      mockchangeorder(this.recipes, this.$root.store.username);
     },
     updateProgress(recipeId, newProgress) {
       const recipe = this.recipes.find((r) => r.id === recipeId);
       if (recipe) {
-        recipe.progress = mockGetReecipePrecntag(recipe);
+        recipe.progress = mockGetReecipePrecntag(
+          recipe,
+          this.$root.store.username
+        );
       }
     },
   },

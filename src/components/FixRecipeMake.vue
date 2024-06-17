@@ -94,11 +94,6 @@ export default {
   transform-origin: center;
 }
 
-.recipe-card-content:hover {
-  transform: rotateY(15deg) translateY(-5px) scale(1.05); /* Improved 3D rotation and scaling */
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); /* Deepening shadow */
-}
-
 .recipe-details {
   padding: 15px;
   text-align: center;
