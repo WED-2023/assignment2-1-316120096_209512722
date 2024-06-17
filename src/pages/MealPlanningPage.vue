@@ -1,13 +1,11 @@
 <template>
   <div class="meal-planning-container">
-    <!-- Existing HTML code -->
     <draggable v-model="recipes" class="recipe-list" @end="onDragEnd">
       <div
         v-for="(recipe, index) in recipes"
         :key="recipe.id"
         class="recipe-item"
       >
-        <!-- Existing recipe item structure -->
         <div class="recipe-header">
           <h2>{{ "Recipe " + (index + 1) }}</h2>
           <button class="remove-button" @click="removeRecipe(index)">
@@ -28,17 +26,16 @@
         <!-- Progress bar -->
         <div class="recipe-progress">
           <div class="progress">
-            <div
-              class="progress-bar"
-              :style="{ width: recipe.progress + '%' }"
-              :aria-valuenow="recipe.progress"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            >
+            <div class="progress-bar" :style="{ width: recipe.progress + '%' }">
               {{ recipe.progress }}%
             </div>
           </div>
         </div>
+
+        <!-- Remove button -->
+        <button class="remove-button" @click="removeRecipe(index)">
+          &times;
+        </button>
       </div>
     </draggable>
 
@@ -119,15 +116,23 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.meal-planning-title {
-  color: #444;
+.recipe-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 130px; /* Adjust height as necessary */
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative; /* Ensure relative positioning for absolute children */
 }
 
 .recipe-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
 }
 
 .remove-button {
@@ -148,6 +153,7 @@ export default {
   background-color: #c82333;
   transform: rotate(90deg);
 }
+
 .checkbox-container {
   display: inline-block;
   position: relative;
@@ -202,19 +208,6 @@ export default {
   transform: rotate(45deg);
 }
 
-.recipe-item {
-  padding: 10px;
-  margin-bottom: 15px;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-.recipe-item:hover {
-  transform: translateY(-5px);
-  background-color: #e9ecef;
-}
-
 .remove-all-button {
   display: block;
   width: 100%;
@@ -232,12 +225,21 @@ export default {
 .remove-all-button:hover {
   background-color: #c82333;
 }
+
+.progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20px; /* Adjust height of the progress bar container */
+}
+
 .progress-bar {
-  background-color: #007bff; /* Choose your desired progress bar color */
   height: 100%;
+  background-color: #007bff; /* Choose your desired progress bar color */
   color: white;
   text-align: center;
-  line-height: 1.5;
+  line-height: 20px; /* Ensure proper centering of text */
   border-radius: 10px;
 }
 </style>

@@ -10,7 +10,7 @@ const recipeFullInfo = GetRecipeInformation;
 const reciPoggres = 0;
 let myMap = {};
 for (let key in mealPlanninglist) {
-  myMap[mealPlanninglist[key].id] = 10;
+  myMap[mealPlanninglist[key].id] = 100;
 }
 
 export function mockGetReecipePrecntag(recipe, username) {
