@@ -109,6 +109,7 @@ export default {
 <style scoped>
 .meal-planning-container {
   background-color: rgba(255, 255, 255, 0.95);
+  background-size: cover;
   padding: 20px;
   border-radius: 20px;
   max-width: 800px; /* Adjust the max-width to your desired width */

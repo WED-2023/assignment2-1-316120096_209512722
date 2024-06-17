@@ -14,7 +14,7 @@
 
     <RecipePreviewList
       ref="recipePreviewList"
-      title="Random Recipes"
+      title="Explore this recipes"
       @recipes-updated="handleRecipesUpdated"
     />
 
