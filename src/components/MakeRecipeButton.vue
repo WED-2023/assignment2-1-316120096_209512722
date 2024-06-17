@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { mockAddRecipe } from "../services/mealPlanning.js";
 export default {
   props: {
     recipeId: {
@@ -16,6 +17,8 @@ export default {
   },
   methods: {
     navigateToRecipe() {
+      mockAddRecipe(this.recipeId, this.$root.store.username);
+
       let number = parseInt(this.recipeId);
       this.$router.push({
         name: "MakeRecipeid",

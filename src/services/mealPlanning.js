@@ -10,14 +10,14 @@ const recipeFullInfo = GetRecipeInformation;
 const reciPoggres = 0;
 let myMap = {};
 for (let key in mealPlanninglist) {
-  myMap[mealPlanninglist[key].id] = 10;
+  myMap[mealPlanninglist[key].id] = 100;
 }
 
-export function mockGetReecipePrecntag(recipe) {
+export function mockGetReecipePrecntag(recipe, username) {
   return myMap[recipe.id];
 }
 
-export function mockGetmealPlanninglists() {
+export function mockGetmealPlanninglists(username) {
   return {
     status: 200,
     response: {
@@ -27,23 +27,24 @@ export function mockGetmealPlanninglists() {
     },
   };
 }
-export function getRecipeslen() {
+export function getRecipeslen(username) {
   return mealPlanninglist.length;
 }
-export function mockAddRecipe(recipeDetails) {
-  familyRecipes.push(recipeDetails);
+export function mockAddRecipe(recipeDetails, usernamer) {
+  mealPlanninglist.push(recipeDetails);
+
   return {
     status: 200,
     response: {
       data: {
-        message: "The Recipe successfully added to My meals",
+        message: "The Recipe successfully added to My meals" + usernamer,
         success: true,
       },
     },
   };
 }
 
-export async function removemealPlanninglist(recipeId) {
+export async function removemealPlanninglist(recipeId, username) {
   mealPlanninglist = mealPlanninglist.filter(
     (recipe) => recipe.id !== recipeId
   );
@@ -54,7 +55,7 @@ export function mockRemoveAllMeals() {
   console.log(mealPlanninglist.length);
 }
 
-export async function mockgetRecipeInstructions(recipeId) {
+export async function mockgetRecipeInstructions(recipeId, userName) {
   return recipeInstructions[0].steps;
 }
 
@@ -76,6 +77,6 @@ export async function mockGetRecipeInfo() {
   };
 }
 
-export async function mockchangeorder(recipeLsit) {
+export async function mockchangeorder(recipeLsit, userName) {
   mealPlanninglist = recipeLsit;
 }

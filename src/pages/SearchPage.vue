@@ -2,6 +2,7 @@
   <div class="container">
     <!-- Search Form -->
     <form @submit.prevent="searchRecipesHandler" class="search-form">
+      <!-- Search Input -->
       <b-form-group label="Search" class="results-input">
         <input
           aria-label="Search"
@@ -11,6 +12,8 @@
           class="search-input"
         />
       </b-form-group>
+
+      <!-- Results Count -->
       <b-form-group label="Results count" class="results-count">
         <b-form-select v-model="resultsCount">
           <option value="5">5</option>
@@ -18,75 +21,64 @@
           <option value="15">15</option>
         </b-form-select>
       </b-form-group>
-      <b-form-group label="Filter by" class="Filter-by">
+
+      <!-- Filter By -->
+      <b-form-group label="Filter by" class="filter-by">
         <b-form-select v-model="filterBy">
-          <option value="">None</option>
-          <option value="vegetarian">Vegetarian</option>
-          <option value="vegan">Vegan</option>
-          <option value="gluten free">Gluten Free</option>
-          <!-- Add more diet options as needed -->
+          <option
+            v-for="option in filterByOptions"
+            :key="option.value"
+            :value="option.value"
+          >
+            {{ option.text }}
+          </option>
         </b-form-select>
       </b-form-group>
+
+      <!-- Cuisine Type -->
       <b-form-group label="Cuisine Type" class="cuisine-type">
         <b-form-select v-model="cuisineType">
-          <option value="">None</option>
-          <option value="African">African</option>
-          <option value="Asian">Asian</option>
-          <option value="American">American</option>
-          <option value="British">British</option>
-          <option value="Cajun">Cajun</option>
-          <option value="Caribbean">Caribbean</option>
-          <option value="Chinese">Chinese</option>
-          <option value="Eastern European">Eastern European</option>
-          <option value="European">European</option>
-          <option value="French">French</option>
-          <option value="German">German</option>
-          <option value="Greek">Greek</option>
-          <option value="Indian">Indian</option>
-          <option value="Irish">Irish</option>
-          <option value="Italian">Italian</option>
-          <option value="Japanese">Japanese</option>
-          <option value="Jewish">Jewish</option>
-          <option value="Korean">Korean</option>
-          <option value="Latin American">Latin American</option>
-          <option value="Mediterranean">Mediterranean</option>
-          <option value="Mexican">Mexican</option>
-          <option value="Middle Eastern">Middle Eastern</option>
-          <option value="Nordic">Nordic</option>
-          <option value="Southern">Southern</option>
-          <option value="Spanish">Spanish</option>
-          <option value="Thai">Thai</option>
-          <option value="Vietnamese">Vietnamese</option>
+          <option
+            v-for="option in cuisineTypeOptions"
+            :key="option.value"
+            :value="option.value"
+          >
+            {{ option.text }}
+          </option>
         </b-form-select>
       </b-form-group>
+
+      <!-- Meal Type -->
       <b-form-group label="Meal Type" class="meal-type">
         <b-form-select v-model="mealType">
-          <option value="">None</option>
-          <option value="main course">Main Course</option>
-          <option value="side dish">Side Dish</option>
-          <option value="dessert">Dessert</option>
-          <option value="appetizer">Appetizer</option>
-          <option value="salad">Salad</option>
-          <option value="bread">Bread</option>
-          <option value="breakfast">Breakfast</option>
-          <option value="soup">Soup</option>
-          <option value="beverage">Beverage</option>
-          <option value="sauce">Sauce</option>
-          <option value="marinade">Marinade</option>
-          <option value="fingerfood">Fingerfood</option>
-          <option value="snack">Snack</option>
-          <option value="drink">Drink</option>
+          <option
+            v-for="option in mealTypeOptions"
+            :key="option.value"
+            :value="option.value"
+          >
+            {{ option.text }}
+          </option>
         </b-form-select>
       </b-form-group>
+
+      <!-- Sort By -->
       <b-form-group label="Sort by" class="sort-by">
         <b-form-select v-model="sortBy">
-          <option value="likes">Likes</option>
-          <option value="time">Time to Make</option>
+          <option
+            v-for="option in sortByOptions"
+            :key="option.value"
+            :value="option.value"
+          >
+            {{ option.text }}
+          </option>
         </b-form-select>
       </b-form-group>
+
+      <!-- Search Button -->
       <button type="submit" class="search-button">Search</button>
     </form>
 
+    <!-- Display Recipes -->
     <div v-if="filteredRecipes.length" class="recipe-list">
       <RecipePreview
         v-for="(recipe, index) in filteredRecipes"
@@ -94,6 +86,7 @@
         :recipe="recipe"
       />
     </div>
+
     <!-- No Recipes Found -->
     <div v-else-if="!loading && !filteredRecipes.length" class="no-recipes">
       No recipes found.
@@ -115,12 +108,71 @@ export default {
     return {
       searchQuery: "",
       filteredRecipes: [],
-      resultsCount: 5, // default value
-      sortBy: "likes", // default sorting option
-      filterBy: "", // default filter by diet
-      cuisineType: "", // default cuisine type
-      mealType: "", // default meal type
+      resultsCount: 5,
+      sortBy: "likes",
+      filterBy: "",
+      cuisineType: "",
+      mealType: "",
       loading: false,
+
+      sortByOptions: [
+        { value: "likes", text: "Likes" },
+        { value: "time", text: "Time to Make" },
+      ],
+      filterByOptions: [
+        { value: "", text: "None" },
+        { value: "vegetarian", text: "Vegetarian" },
+        { value: "vegan", text: "Vegan" },
+        { value: "gluten free", text: "Gluten Free" },
+      ],
+      cuisineTypeOptions: [
+        { value: "", text: "None" },
+        { value: "African", text: "African" },
+        { value: "Asian", text: "Asian" },
+        { value: "American", text: "American" },
+        { value: "British", text: "British" },
+        { value: "Cajun", text: "Cajun" },
+        { value: "Caribbean", text: "Caribbean" },
+        { value: "Chinese", text: "Chinese" },
+        { value: "Eastern European", text: "Eastern European" },
+        { value: "European", text: "European" },
+        { value: "French", text: "French" },
+        { value: "German", text: "German" },
+        { value: "Greek", text: "Greek" },
+        { value: "Indian", text: "Indian" },
+        { value: "Irish", text: "Irish" },
+        { value: "Italian", text: "Italian" },
+        { value: "Japanese", text: "Japanese" },
+        { value: "Jewish", text: "Jewish" },
+        { value: "Korean", text: "Korean" },
+        { value: "Latin American", text: "Latin American" },
+        { value: "Mediterranean", text: "Mediterranean" },
+        { value: "Mexican", text: "Mexican" },
+        { value: "Middle Eastern", text: "Middle Eastern" },
+        { value: "Nordic", text: "Nordic" },
+        { value: "Southern", text: "Southern" },
+        { value: "Spanish", text: "Spanish" },
+        { value: "Thai", text: "Thai" },
+        { value: "Vietnamese", text: "Vietnamese" },
+      ],
+      mealTypeOptions: [
+        { value: "", text: "None" },
+        { value: "main course", text: "Main Course" },
+        { value: "side dish", text: "Side Dish" },
+        { value: "dessert", text: "Dessert" },
+        { value: "appetizer", text: "Appetizer" },
+        { value: "salad", text: "Salad" },
+        { value: "bread", text: "Bread" },
+        { value: "breakfast", text: "Breakfast" },
+        { value: "soup", text: "Soup" },
+        { value: "beverage", text: "Beverage" },
+        { value: "sauce", text: "Sauce" },
+        { value: "marinade", text: "Marinade" },
+        { value: "fingerfood", text: "Fingerfood" },
+        { value: "snack", text: "Snack" },
+        { value: "drink", text: "Drink" },
+      ],
+
       recentSearch: {
         query: "",
         resultsCount: 5,
@@ -129,7 +181,17 @@ export default {
         cuisineType: "",
         mealType: "",
       },
+
     };
+  },
+  mounted() {
+    // Load last search query from localStorage on component mount
+    const lastSearchQuery = localStorage.getItem("lastSearchQuery");
+    if (lastSearchQuery && this.$root.store.username) {
+      this.searchQuery = lastSearchQuery;
+      // Optionally, you can trigger search here automatically
+      this.searchRecipesHandler();
+    }
   },
   methods: {
     async searchRecipesHandler() {
@@ -143,11 +205,21 @@ export default {
           cuisineType: this.cuisineType,
           mealType: this.mealType,
         });
+        // Save searchQuery to localStorage after successful search
+        if (this.$root.store.username) {
+          localStorage.setItem("lastSearchQuery", this.searchQuery);
+        } else localStorage.setItem("lastSearchQuery", "");
       } catch (error) {
         console.error("An error occurred while fetching the recipes:", error);
       } finally {
         this.loading = false;
       }
+    },
+  },
+  watch: {
+    sortBy: {
+      handler: "searchRecipesHandler",
+      immediate: true,
     },
   },
 };

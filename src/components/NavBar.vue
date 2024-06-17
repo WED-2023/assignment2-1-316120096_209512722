@@ -105,12 +105,10 @@ export default {
       required: true,
     },
   },
-  mounted() {
-    this.update();
-  },
+  mounted() {},
   data() {
     return {
-      mealCount: getRecipeslen(),
+      mealCount: this.$root.store.count,
 
       showModal: false,
     };
