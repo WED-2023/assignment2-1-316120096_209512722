@@ -121,6 +121,14 @@ export default {
       cuisineType: "", // default cuisine type
       mealType: "", // default meal type
       loading: false,
+      recentSearch: {
+        query: "",
+        resultsCount: 5,
+        sortBy: "",
+        filterBy: "",
+        cuisineType: "",
+        mealType: "",
+      },
     };
   },
   methods: {

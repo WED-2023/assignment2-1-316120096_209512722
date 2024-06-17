@@ -40,7 +40,7 @@
         </div>
         <div class="form-group">
           <label for="description"
-            >Description<span class="text-danger">*</span></label
+            >Recipe Summary<span class="text-danger">*</span></label
           >
           <textarea
             id="description"
@@ -277,7 +277,7 @@ export default {
         formData.append("instructions", JSON.stringify(this.form.instructions));
         formData.append("ingredients", JSON.stringify(this.form.ingredients));
 
-        await mockAddUserRecipes(formData);
+        await mockAddUserRecipes(formData, this.$root.store.username);
 
         this.success = true;
         this.resetForm();
