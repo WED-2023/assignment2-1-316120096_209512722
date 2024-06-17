@@ -18,8 +18,7 @@ export default {
   methods: {
     navigateToRecipe() {
       mockAddRecipe(this.recipeId, this.$root.store.username);
-
-      let number = parseInt(this.recipeId);
+      this.$root.store.count++;
       this.$router.push({
         name: "MakeRecipeid",
         params: { recipeId: this.recipeId },
