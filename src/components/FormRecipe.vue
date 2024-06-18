@@ -40,7 +40,7 @@
         </div>
         <div class="form-group">
           <label for="description"
-            >Description<span class="text-danger">*</span></label
+            >Recipe Summary<span class="text-danger">*</span></label
           >
           <textarea
             id="description"
@@ -165,20 +165,13 @@
                 editingIngredient !== null && editingIngredient !== index
               "
             >
-              <option value="">Select unit</option>
-              <option value="tbsp">Tbsp</option>
-              <option value="cup">Cup</option>
-              <option value="g">Gram</option>
-              <option value="cloves">Cloves</option>
-              <option value="tsp">Teaspoon</option>
-              <option value="tbsp">Tablespoon</option>
-              <option value="mL">Milliliter</option>
-              <option value="l">Liter</option>
-              <option value="serv">Servings</option>
-              <option value="ml">Milligram</option>
-              <option value="kg">Kilogram</option>
-              <option value="pinch">Pinch</option>
-              <option value="oz">Ounce</option>
+              <option
+                v-for="unit in units"
+                :key="unit.value"
+                :value="unit.value"
+              >
+                {{ unit.text }}
+              </option>
             </select>
             <button
               type="button"
@@ -238,6 +231,22 @@ import { mockAddUserRecipes } from "../services/recipes.js";
 export default {
   data() {
     return {
+      units: [
+        { value: "", text: "Select unit" },
+        { value: "tbsp", text: "Tbsp" },
+        { value: "cup", text: "Cup" },
+        { value: "g", text: "Gram" },
+        { value: "cloves", text: "Cloves" },
+        { value: "tsp", text: "Teaspoon" },
+        { value: "tbsp", text: "Tablespoon" },
+        { value: "mL", text: "Milliliter" },
+        { value: "l", text: "Liter" },
+        { value: "serv", text: "Servings" },
+        { value: "mg", text: "Milligram" },
+        { value: "kg", text: "Kilogram" },
+        { value: "pinch", text: "Pinch" },
+        { value: "oz", text: "Ounce" },
+      ],
       message: "Add Recipe",
       form: {
         title: "",
@@ -277,7 +286,7 @@ export default {
         formData.append("instructions", JSON.stringify(this.form.instructions));
         formData.append("ingredients", JSON.stringify(this.form.ingredients));
 
-        await mockAddUserRecipes(formData);
+        await mockAddUserRecipes(formData, this.$root.store.username);
 
         this.success = true;
         this.resetForm();

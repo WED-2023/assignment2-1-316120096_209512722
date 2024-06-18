@@ -114,6 +114,7 @@ export default {
       cuisineType: "",
       mealType: "",
       loading: false,
+
       sortByOptions: [
         { value: "likes", text: "Likes" },
         { value: "time", text: "Time to Make" },
@@ -171,6 +172,16 @@ export default {
         { value: "snack", text: "Snack" },
         { value: "drink", text: "Drink" },
       ],
+
+      recentSearch: {
+        query: "",
+        resultsCount: 5,
+        sortBy: "",
+        filterBy: "",
+        cuisineType: "",
+        mealType: "",
+      },
+
     };
   },
   mounted() {

@@ -3,9 +3,15 @@
     <div v-if="recipe" class="recipe-container">
       <div class="recipe-header">
         <h1 class="recipe-title">{{ recipe.title }}</h1>
-        <RecipeButton :recipeId="recipeId" buttonText="Make this recipe" />
+        <RecipeButton
+          :recipeId="recipeId"
+          buttonText="Make this recipe"
+          class="recipe-button"
+        />
         <p class="recipe-id">Recipe ID: {{ recipeId }}</p>
-        <img :src="recipe.image" class="recipe-image" />
+        <div class="img-container">
+          <img :src="recipe.image" class="recipe-image" />
+        </div>
       </div>
       <div class="recipe-body">
         <div class="recipe-details">
@@ -17,6 +23,14 @@
             <i class="fas fa-heart"></i>
             <span>{{ recipe.aggregateLikes }} likes</span>
           </div>
+          <div class="detail-item">
+            <i class="fas fa-utensils"></i>
+            <span>{{ recipe.servings }} Servings</span>
+          </div>
+        </div>
+        <div class="recipe-summary">
+          <h3>Summary</h3>
+          <p v-html="recipe.summary"></p>
         </div>
         <div class="recipe-content">
           <div class="ingredients">
@@ -47,6 +61,8 @@
 <script>
 import { mockGetRecipeFullDetails } from "../services/recipes.js";
 import RecipeButton from "../components/MakeRecipeButton.vue";
+import "@fortawesome/fontawesome-free/css/all.css";
+
 export default {
   components: {
     RecipeButton,
@@ -88,7 +104,9 @@ export default {
         extendedIngredients,
         aggregateLikes,
         readyInMinutes,
+        summary,
         image,
+        servings,
         title,
       } = response.data.recipe;
 
@@ -106,6 +124,8 @@ export default {
         extendedIngredients,
         aggregateLikes,
         readyInMinutes,
+        servings,
+        summary,
         image,
         title,
       };
@@ -119,13 +139,26 @@ export default {
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Italianno&display=swap");
+.recipe-button {
+  font-size: 2rem;
+}
+.img-container {
+  display: flex;
+  justify-content: center; /* Center the image horizontally */
+  align-items: center; /* Center the image vertically */
+  margin-top: 1rem;
+  overflow: hidden;
+}
+
 .recipe-container {
-  max-width: 800px;
+  max-width: 1400px;
   margin: 0 auto;
-  background-color: #f8f8f8b3;
+  background-color: #ffffffcd;
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   padding: 2rem;
+  font-family: "Italianno", cursive;
 }
 
 .recipe-header {
@@ -134,20 +167,22 @@ export default {
 }
 
 .recipe-title {
-  font-size: 2.5rem;
+  font-size: 4rem;
   font-weight: bold;
   color: #333;
   margin-bottom: 0.5rem;
 }
 
 .recipe-id {
-  font-size: 1rem;
+  font-size: 1.8rem;
   color: #666;
 }
 
 .recipe-image {
-  max-width: 100%;
-  height: auto;
+  width: 100%; /* Ensure the image takes up full width of the container */
+  max-width: 600px; /* Set a max width to maintain consistency */
+  height: 450px; /* Set a fixed height for all images */
+  object-fit: cover; /* Ensure the image covers the container while maintaining aspect ratio */
   border-radius: 15px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
@@ -162,11 +197,11 @@ export default {
   display: flex;
   align-items: center;
   margin: 0 1rem;
+  font-size: 2rem;
 }
 
 .detail-item i {
-  font-size: 1.2rem;
-  color: #666;
+  color: #7e8473;
   margin-right: 0.5rem;
 }
 
@@ -188,7 +223,7 @@ export default {
 
 .ingredient-list li,
 .instruction-list li {
-  font-size: 1.1rem;
+  font-size: 1.9rem;
   line-height: 1.5;
   margin-bottom: 0.5rem;
 }
@@ -208,7 +243,7 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
-  background-color: #333;
+  background-color: #070707;
   color: #fff;
   font-weight: bold;
   width: 1.5rem;
@@ -220,10 +255,16 @@ export default {
 }
 
 h3 {
-  font-size: 1.5rem;
+  font-size: 2.3rem;
   font-weight: bold;
   color: #333;
   margin-bottom: 1rem;
+}
+
+.recipe-summary p {
+  font-size: 2rem;
+  line-height: 1.6;
+  color: #1b1b1b;
 }
 
 @media (max-width: 768px) {
