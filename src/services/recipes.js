@@ -46,7 +46,7 @@ export function mockGetRecipeFullDetails(recipeId) {
   return { status: 200, data: {} };
 }
 
-export function mockAddUserRecipes(recipeDetails, userName) {
+export function mockAddUserRecipes(recipeDetails) {
   let userRecipes = []; // Define userRecipes array
   const title = recipeDetails.get("title");
   const image = recipeDetails.get("image");
