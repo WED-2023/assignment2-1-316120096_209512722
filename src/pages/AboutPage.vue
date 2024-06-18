@@ -146,6 +146,9 @@ export default {
 .side-image:hover {
   transform: scale(1.05);
 }
+body {
+  font-family: "Roboto", sans-serif;
+}
 
 h1 {
   font-size: 2.5em;
@@ -153,6 +156,8 @@ h1 {
   text-align: center;
   color: #ff6f00;
   animation: fadeInDown 1s ease-in-out;
+  font-family: "Montserrat", sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 h2 {
@@ -160,6 +165,7 @@ h2 {
   margin-top: 30px;
   margin-bottom: 10px;
   color: #ff6f00;
+  font-family: "Montserrat", sans-serif;
 }
 
 p {
@@ -236,6 +242,7 @@ p:last-child {
   align-items: center;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .linkedin-button:hover {
