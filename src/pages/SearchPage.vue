@@ -115,7 +115,6 @@ export default {
       cuisineType: "",
       mealType: "",
       loading: false,
-
       sortByOptions: [
         { value: "likes", text: "Likes" },
         { value: "time", text: "Time to Make" },
@@ -182,6 +181,7 @@ export default {
         cuisineType: "",
         mealType: "",
       },
+
     };
   },
   mounted() {
@@ -189,6 +189,12 @@ export default {
     const lastSearchQuery = localStorage.getItem("lastSearchQuery");
     if (lastSearchQuery && this.$root.store.username) {
       this.searchQuery = lastSearchQuery;
+      this.resultsCount = localStorage.getItem("resultsCount");
+      this.sortBy = localStorage.getItem("sortBy");
+      this.filterBy = localStorage.getItem("filerBy");
+      this.cuisineType = localStorage.getItem("cuisineType", this.cuisineType);
+      this.mealType = localStorage.getItem("mealType", this.mealType);
+
       // Optionally, you can trigger search here automatically
       this.searchRecipesHandler();
     }
@@ -208,6 +214,11 @@ export default {
         // Save searchQuery to localStorage after successful search
         if (this.$root.store.username) {
           localStorage.setItem("lastSearchQuery", this.searchQuery);
+          localStorage.setItem("resultsCount", this.resultsCount);
+          localStorage.setItem("sortBy", this.sortBy);
+          localStorage.setItem("filerBy", this.filterBy);
+          localStorage.setItem("cuisineType", this.cuisineType);
+          localStorage.setItem("mealType", this.mealType);
         } else localStorage.setItem("lastSearchQuery", "");
       } catch (error) {
         console.error("An error occurred while fetching the recipes:", error);

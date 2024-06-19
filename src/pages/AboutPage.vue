@@ -3,6 +3,32 @@
     <div class="content">
       <h1>About Us</h1>
 
+      <div class="section-container contact-container">
+        <h2>Our Team</h2>
+        <div
+          v-for="member in teamMembers"
+          :key="member.name"
+          class="team-member"
+        >
+          <img :src="member.image" :alt="member.name" class="member-photo" />
+          <div class="team-info">
+            <h3>{{ member.name }}</h3>
+            <p>{{ member.occupation }}</p>
+            <p>{{ member.bio }}</p>
+          </div>
+          <div class="linkedin-buttons">
+            <button class="linkedin-button" @click="redirectToLinkedIn(member)">
+              <img
+                src="@/assets/mocks/linkedin-svgrepo-com.svg"
+                alt="LinkedIn Logo"
+                class="logo-svg"
+              />
+              <span>Connect </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Section: Our Journey -->
       <div
         class="section-container"
@@ -12,38 +38,12 @@
         <h2>{{ section.title }}</h2>
         <p>{{ section.content }}</p>
         <!-- Add LinkedIn button for the Contact Us section -->
-        <div v-if="section.title === 'Contact Us'" class="button-container">
-          <button @click="redirectToLinkedIn" class="linkedin-button">
-            Connect with us on LinkedIn
-          </button>
-        </div>
       </div>
 
       <!-- Section: Contact Us -->
     </div>
 
-    <div class="image-gallery">
-      <img
-        src="@/assets/images/download.jpg"
-        alt="Helping an old man"
-        class="side-image"
-      />
-      <img
-        src="@/assets/images/1_7.jpg"
-        alt="Helping an old man"
-        class="side-image"
-      />
-      <img
-        src="@/assets/images/incredible-woman-assisting-elderly-lady-260nw-683238484.webp"
-        alt="Assisting elderly"
-        class="side-image"
-      />
-      <img
-        src="@/assets/images/istockphoto-500674888-612x612.jpg"
-        alt="Assisting elderly"
-        class="side-image"
-      />
-    </div>
+    <div class="image-gallery"></div>
   </div>
 </template>
 
@@ -60,23 +60,7 @@ export default {
           This journey led us to develop a project that combines our love for food and technology:
            a recipe site that celebrates family traditions and culinary heritage.`,
         },
-        {
-          title: "Professional Background",
-          content: `We are both third-year students majoring in Software and Information
-            systems Engineering. Our academic journey has been marked by
-            excellence and ambition, consistently ranking as the top students in
-            our class. This drive for knowledge and growth has not only honed our
-            technical skills but also prepared us to tackle complex challenges in
-            the tech world.`,
-        },
-        {
-          title: "Fullstack Engineers",
-          content: `Through rigorous coursework and hands-on projects, we have expanded
-            our expertise to become proficient fullstack engineers. Our skills
-            span across front-end and back-end development, enabling us to build
-            comprehensive and robust applications. We take pride in our ability to
-            turn ideas into functional and user-friendly solutions.`,
-        },
+
         {
           title: "Our Passion Projects",
           content: `Outside of our academic achievements, 
@@ -92,26 +76,34 @@ export default {
           preserving and sharing valuable traditions like family recipes.
            Our goal is to leverage our skills to create solutions that bring people together and make daily tasks more enjoyable. We are driven by a desire to continue learning, growing, and contributing to the tech community`,
         },
+      ],
+      teamMembers: [
         {
-          title: "Contact Us ",
-
-          content: `We envision a future where technology seamlessly integrates into daily
-            life, enhancing productivity and bringing people together. Our goal is
-            to leverage our skills to create impactful solutions that address
-            real-world problems. We are driven by a desire to learn, grow, and
-            contribute to the tech community.`,
+          name: "Omer Laufer",
+          image: require("@/assets/images/OmerLauferPic.png"),
+          occupation: "Software Engineer",
+          bio:
+            "I'm a Third-year student studying software and information systems engineering with Python, Java, C, C++, and C# skills. I'm passionate about leveraging my abilities to have a positive influence, which is why I volunteer as a System Implementer with Code For Israel. I'm committed to producing outstanding results and i eager to seek chances in software development,",
+          linkedin: "https://www.linkedin.com/in/omer-laufer/",
+        },
+        {
+          name: "Omer Adam",
+          image: require("@/assets/images/OmerAdamPic.png"),
+          occupation: "Software Engineer",
+          bio:
+            "I'm a 3rd Year Software and Information Systems Engineering Student at Ben Gurion University and also a Software Engineer at Global Remit. As a high-energy, autodidact, and collaborative team player who loves challenges and learning new fields, I'm constantly seeking opportunities to expand my knowledge and skills. In addition to my studies and work, I'm also passionate about exploring new technologies and working on side projects that showcase my technical abilities and creativity.",
+          linkedin: "https://www.linkedin.com/in/omer-adam-735ba1258/",
         },
       ],
     };
   },
   methods: {
-    redirectToLinkedIn() {
-      window.open("https://www.linkedin.com/in/omer-laufer/", "_blank");
+    redirectToLinkedIn(member) {
+      window.open(member.linkedin, "_blank");
     },
   },
 };
 </script>
-
 <style scoped>
 .about-container {
   display: flex;
@@ -154,6 +146,9 @@ export default {
 .side-image:hover {
   transform: scale(1.05);
 }
+body {
+  font-family: "Roboto", sans-serif;
+}
 
 h1 {
   font-size: 2.5em;
@@ -161,6 +156,8 @@ h1 {
   text-align: center;
   color: #ff6f00;
   animation: fadeInDown 1s ease-in-out;
+  font-family: "Montserrat", sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 h2 {
@@ -168,6 +165,7 @@ h2 {
   margin-top: 30px;
   margin-bottom: 10px;
   color: #ff6f00;
+  font-family: "Montserrat", sans-serif;
 }
 
 p {
@@ -198,21 +196,78 @@ p:last-child {
   margin-top: 20px;
 }
 
+.logo-svg {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.team-member {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+.team-member:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.member-info {
+  display: flex;
+}
+
+.member-photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.team-info {
+  flex: 1;
+}
+
 .linkedin-button {
-  display: inline-block;
-  padding: 10px 20px;
   background-color: #0077b5;
-  color: #ffffff;
+  color: white;
+  border: none;
   border-radius: 5px;
-  text-decoration: none;
-  font-size: 1em;
-  margin-top: 10px;
-  transition: background-color 0.3s ease-in-out;
-  z-index: 3; /* Ensure the button is above other elements */
-  position: relative; /* Ensure it can be above other elements */
+  padding: 10px 20px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .linkedin-button:hover {
   background-color: #005582;
+  transform: scale(1.05);
+}
+
+.linkedin-button img {
+  margin-right: 10px;
+}
+:root {
+  --primary-color: #ff6f00;
+  --secondary-color: #333333;
+  --content-padding: 30px;
+  --section-margin-bottom: 20px;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

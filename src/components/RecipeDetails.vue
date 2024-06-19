@@ -5,8 +5,7 @@
     class="recipe-preview"
   >
     <div class="recipe-body">
-      <div v-if="!image_load" class="image-placeholder">Image loading...</div>
-      <img v-else :src="recipe.image" class="recipe-image" />
+      <img v-if="image_load" :src="recipe.image" class="recipe-image" />
     </div>
     <div class="recipe-footer">
       <div :title="recipe.title" class="recipe-title">

@@ -119,6 +119,12 @@ body {
 
 /* Container styles */
 .meal-planning-container {
+
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  border-radius: 20px;
+  max-width: 800px; /* Adjust the max-width to your desired width */
+
   backdrop-filter: blur(10px);
 
   background-image: url("https://t3.ftcdn.net/jpg/02/82/40/28/360_F_282402880_73Gx4lK3fUVOiLkJaAXtz77RxXm7QHaN.jpg");
@@ -127,6 +133,7 @@ body {
   border-radius: 10px;
   box-shadow: 0 4px 72px rgba(193, 59, 59, 0.741);
   max-width: 1500px;
+
   margin: 0 auto;
   margin-top: 20px;
   display: flex;

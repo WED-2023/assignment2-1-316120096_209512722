@@ -10,14 +10,12 @@
 }
 
 .generic-page {
-  max-width: 80%;
+  max-width: 85%;
   margin: 0 auto;
-  padding: 30px 20px;
-  height: 100vh;
+  padding: 40px 20px;
   background-image: linear-gradient(to top, #dfe9f3 0%, white 100%);
-  background-size: cover;
   font-family: var(--font-family-sans);
-  box-sizing: border-box; /* Ensure padding is included in the height */
+  background-size: cover;
 }
 
 .title {
