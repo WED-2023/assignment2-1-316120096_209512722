@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import { mockAddRecipe } from "../services/mealPlanning.js";
 export default {
   props: {
     recipeId: {
@@ -17,8 +16,6 @@ export default {
   },
   methods: {
     navigateToRecipe() {
-      mockAddRecipe(this.recipeId, this.$root.store.username);
-      this.$root.store.count++;
       this.$router.push({
         name: "MakeRecipeid",
         params: { recipeId: this.recipeId },
@@ -30,14 +27,17 @@ export default {
 
 <style scoped>
 button {
-  padding: 10px 20px;
-  background-color: #28a745;
+  background-color: #136c44;
   color: white;
   border: none;
+  padding: 0.69rem 1rem;
+  font-size: 1.5rem;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
 }
 button:hover {
-  background-color: #218838;
+  background-color: #4dc367;
 }
 </style>

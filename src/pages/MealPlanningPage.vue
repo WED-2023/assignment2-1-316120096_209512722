@@ -16,8 +16,10 @@
           <h2>{{ "Recipe " + (index + 1) }}</h2>
           <button class="remove-button" @click="removeRecipe(index)">
             <i class="fas fa-times"></i>
+            <MakeRecipeButton :recipeId="recipe.id" class="small-button" />
           </button>
         </div>
+
         <div class="recipe-preview-container">
           <RecipePreview :recipe="recipe" />
         </div>
@@ -38,6 +40,7 @@
         </div>
       </div>
     </draggable>
+
     <button
       v-if="recipes.length"
       class="remove-all-button"
@@ -58,21 +61,23 @@ import {
 } from "../services/mealPlanning.js";
 import RecipePreview from "../components/RecipePreview.vue";
 import draggable from "vuedraggable";
+import MakeRecipeButton from "../components/MakeRecipeButton.vue";
 
 export default {
   name: "MealPage",
   components: {
     RecipePreview,
     draggable,
+    MakeRecipeButton,
   },
   data() {
     return {
       recipes: [],
     };
   },
-  async created() {
-    this.recipes = (
-      await mockGetmealPlanninglists(this.$root.store.username)
+  created() {
+    this.recipes = mockGetmealPlanninglists(
+      this.$root.store.username
     ).response.data.recipes.map((recipe) => ({
       ...recipe,
       done: false,
@@ -105,7 +110,6 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 
@@ -119,21 +123,17 @@ body {
 
 /* Container styles */
 .meal-planning-container {
-
   background-color: rgba(255, 255, 255, 0.95);
   padding: 20px;
   border-radius: 20px;
   max-width: 800px; /* Adjust the max-width to your desired width */
-
   backdrop-filter: blur(10px);
-
   background-image: url("https://t3.ftcdn.net/jpg/02/82/40/28/360_F_282402880_73Gx4lK3fUVOiLkJaAXtz77RxXm7QHaN.jpg");
   background-size: contain;
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 4px 72px rgba(193, 59, 59, 0.741);
   max-width: 1500px;
-
   margin: 0 auto;
   margin-top: 20px;
   display: flex;
@@ -183,6 +183,14 @@ body {
 
 .remove-button:hover {
   color: #c82333;
+}
+
+/* MakeRecipeButton styles */
+.small-button {
+  font-size: 1rem;
+  padding: 5px 10px;
+  margin-left: 10px;
+  margin-bottom: 20px;
 }
 
 /* Recipe Preview styles */

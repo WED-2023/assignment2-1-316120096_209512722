@@ -107,6 +107,7 @@ export default {
   },
   data() {
     return {
+      lastUserName: "",
       searchQuery: "",
       filteredRecipes: [],
       resultsCount: 5,
@@ -181,13 +182,17 @@ export default {
         cuisineType: "",
         mealType: "",
       },
-
     };
   },
   mounted() {
     // Load last search query from localStorage on component mount
     const lastSearchQuery = localStorage.getItem("lastSearchQuery");
-    if (lastSearchQuery && this.$root.store.username) {
+    console.log(this.$root.store.username, this.lastUserName);
+    if (
+      lastSearchQuery &&
+      this.$root.store.username &&
+      this.$root.store.username === this.lastUserName
+    ) {
       this.searchQuery = lastSearchQuery;
       this.resultsCount = localStorage.getItem("resultsCount");
       this.sortBy = localStorage.getItem("sortBy");
@@ -201,6 +206,8 @@ export default {
   },
   methods: {
     async searchRecipesHandler() {
+      this.lastUserName = this.$root.store.username;
+
       this.loading = true;
       try {
         this.filteredRecipes = await mocksearchRecipes({

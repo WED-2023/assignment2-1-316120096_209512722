@@ -4,7 +4,7 @@ import { mockGetRecipesPreview } from "./recipes.js";
 import GetAnalyzedRecipeInstructions from "../assets/mocks/GetAnalyzedRecipeInstructions.json";
 import GetRecipeInformation from "../assets/mocks/GetRecipeInformation.json";
 import axios from "axios";
-const mealPlanninglist = [...recipe_preview];
+let mealPlanninglist = [...recipe_preview].slice(0, 3);
 const recipeInstructions = GetAnalyzedRecipeInstructions;
 const recipeFullInfo = GetRecipeInformation;
 const reciPoggres = 0;

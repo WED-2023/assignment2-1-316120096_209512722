@@ -3,11 +3,17 @@
     <div v-if="recipe" class="recipe-container">
       <div class="recipe-header">
         <h1 class="recipe-title">{{ recipe.title }}</h1>
-        <RecipeButton
-          class="recipe-button"
-          :recipeId="recipeId"
-          buttonText="Make this recipe"
-        />
+        <div class="button-container">
+          <RecipeButton
+            class="recipe-button"
+            :recipeId="recipeId"
+            buttonText="Make this recipe"
+          />
+          <button class="meal-plan-btn" @click="addToMealPlan">
+            Add to meal plan
+          </button>
+        </div>
+
         <p class="recipe-id">Recipe ID: {{ recipeId }}</p>
         <div class="img-container">
           <img :src="recipe.image" class="recipe-image" />
@@ -25,7 +31,7 @@
           </div>
           <div class="detail-item">
             <i class="fas fa-utensils"></i>
-            <span>{{ recipe.servings }} sergings</span>
+            <span>{{ recipe.servings }} servings</span>
           </div>
         </div>
         <div class="recipe-summary">
@@ -57,13 +63,25 @@
     </div>
   </div>
 </template>
-
 <script>
 import { mockGetRecipeFullDetails } from "../services/recipes.js";
 import RecipeButton from "../components/MakeRecipeButton.vue";
+import { mockAddRecipe } from "../services/mealPlanning.js";
+
 export default {
   components: {
     RecipeButton,
+  },
+  methods: {
+    addToMealPlan(recipeId) {
+      swal(
+        "Recipe Added ",
+        "the recipe has been added to your meal plan",
+        "success"
+      );
+      mockAddRecipe(recipeId);
+      this.$root.store.count++;
+    },
   },
   data() {
     return {
@@ -76,25 +94,9 @@ export default {
       this.recipeId = this.$route.params.recipeId;
 
       let response;
-      // response = this.$route.params.response;
+      response = mockGetRecipeFullDetails(this.$route.params.recipeId);
 
-      try {
-        // response = await this.axios.get(
-        //   this.$root.store.server_domain + "/recipes/" + this.$route.params.recipeId,
-        //   {
-        //     withCredentials: true
-        //   }
-        // );
-        console.log("this.$route.params.recipeId", this.$route.params.recipeId);
-        response = mockGetRecipeFullDetails(this.$route.params.recipeId);
-        console.log("response", response);
-        // console.log("response.status", response.status);
-        if (response.status !== 200) this.$router.replace("/NotFound");
-      } catch (error) {
-        console.log("error.response.status", error.response.status);
-        this.$router.replace("/NotFound");
-        return;
-      }
+      if (response.status !== 200) this.$router.replace("/NotFound");
 
       let {
         analyzedInstructions,
@@ -135,7 +137,6 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Italianno&display=swap");
 @import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -161,16 +162,16 @@ export default {
 .recipe-header {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center the elements horizontally */
+  align-items: center;
   margin-bottom: 2rem;
 }
 
 .img-container {
   width: 100%;
-  max-width: 400px; /* Set the maximum width of the image container */
-  aspect-ratio: 4 / 3; /* Maintain a 4:3 aspect ratio */
+  max-width: 400px;
+  aspect-ratio: 4 / 3;
   position: relative;
-  margin-bottom: 1rem; /* Add spacing between image and content */
+  margin-bottom: 1rem;
 }
 
 .recipe-image {
@@ -243,7 +244,11 @@ export default {
   position: relative;
   padding-left: 2rem;
 }
-
+.button-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 1rem;
+}
 .instruction-list li::before {
   content: counter(step-counter);
   position: absolute;
@@ -272,6 +277,27 @@ h3 {
   color: #1b1b1b;
 }
 
+.meal-plan-btn {
+  background-color: #89342c;
+  color: white;
+  border: none;
+  padding: 0.69rem 1rem;
+  font-size: 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+
+.meal-plan-btn:hover {
+  background-color: #e65073;
+}
+
+.meal-plan-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 111, 97, 0.5);
+}
+
 @media (max-width: 768px) {
   .recipe-content {
     flex-direction: column;
@@ -281,12 +307,10 @@ h3 {
   .instructions {
     width: 100%;
   }
-}
 
-@media (max-width: 768px) {
   .recipe-header {
-    flex-direction: column; /* Stack image and content vertically on smaller screens */
-    align-items: center; /* Center the image and content on smaller screens */
+    flex-direction: column;
+    align-items: center;
   }
 
   .img-container {
