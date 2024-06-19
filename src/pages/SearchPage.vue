@@ -84,6 +84,7 @@
         v-for="(recipe, index) in filteredRecipes"
         :key="index"
         :recipe="recipe"
+        class="recipe-item"
       />
     </div>
 
@@ -171,6 +172,16 @@ export default {
         { value: "snack", text: "Snack" },
         { value: "drink", text: "Drink" },
       ],
+
+      recentSearch: {
+        query: "",
+        resultsCount: 5,
+        sortBy: "",
+        filterBy: "",
+        cuisineType: "",
+        mealType: "",
+      },
+
     };
   },
   mounted() {
@@ -351,7 +362,7 @@ export default {
 
 .recipe-item {
   width: 300px;
-  background: #fff;
+  background: #fbfbfb;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;

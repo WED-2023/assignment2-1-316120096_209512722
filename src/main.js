@@ -66,7 +66,7 @@ Vue.use(VueAxios, axios);
 
 Vue.config.productionTip = false;
 
-const shared_data = {
+const shared_data = Vue.observable({
   server_domain: "http://localhost:3000",
   username: localStorage.username,
   count: 0,
@@ -87,7 +87,7 @@ const shared_data = {
       return this.username;
     },
   },
-};
+});
 console.log(shared_data);
 // Vue.prototype.$root.store = shared_data;
 

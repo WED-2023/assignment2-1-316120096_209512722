@@ -1,6 +1,12 @@
 <template>
   <div class="meal-planning-container">
-    <draggable v-model="recipes" class="recipe-list" @end="onDragEnd">
+    <img class="logo" src="@/assets/images/menu.png" alt="Logo" />
+    <draggable
+      v-model="recipes"
+      class="recipe-list"
+      @end="onDragEnd"
+      ghost-class="ghost-card"
+    >
       <div
         v-for="(recipe, index) in recipes"
         :key="recipe.id"
@@ -9,39 +15,35 @@
         <div class="recipe-header">
           <h2>{{ "Recipe " + (index + 1) }}</h2>
           <button class="remove-button" @click="removeRecipe(index)">
-            &times;
+            <i class="fas fa-times"></i>
           </button>
         </div>
-        <RecipePreview :recipe="recipe" />
-        <label class="checkbox-container">
-          <input
-            type="checkbox"
-            :checked="recipe.done"
-            @click="toggleDone(recipe)"
-          />
-          <span class="checkmark"></span>
-          Done
-        </label>
-
-        <!-- Progress bar -->
-        <div class="recipe-progress">
+        <div class="recipe-preview-container">
+          <RecipePreview :recipe="recipe" />
+        </div>
+        <div class="progress-container">
           <div class="progress">
             <div class="progress-bar" :style="{ width: recipe.progress + '%' }">
               {{ recipe.progress }}%
             </div>
           </div>
+          <div class="checkbox-container">
+            <input
+              type="checkbox"
+              :checked="recipe.done"
+              @click="toggleDone(recipe)"
+            />
+            <label>Done</label>
+          </div>
         </div>
-
-        <!-- Remove button -->
-        <button class="remove-button" @click="removeRecipe(index)">
-          &times;
-        </button>
       </div>
     </draggable>
-
-    <!-- Remove all button -->
-    <button class="remove-all-button" @click="removeAllRecipes">
-      Remove All Recipes
+    <button
+      v-if="recipes.length"
+      class="remove-all-button"
+      @click="removeAllRecipes"
+    >
+      <i class="fas fa-trash"></i> Remove All Recipes
     </button>
   </div>
 </template>
@@ -73,14 +75,15 @@ export default {
       await mockGetmealPlanninglists(this.$root.store.username)
     ).response.data.recipes.map((recipe) => ({
       ...recipe,
-      done: false, // Initially no recipes are marked as done
-      progress: mockGetReecipePrecntag(recipe, this.$root.store.username), // Initialize progress to 0%
+      done: false,
+      progress: mockGetReecipePrecntag(recipe, this.$root.store.username),
     }));
   },
   methods: {
     removeRecipe(index) {
       const removedRecipe = this.recipes.splice(index, 1)[0];
       removemealPlanninglist(removedRecipe.id, this.$root.store.username);
+      this.$root.store.count--;
     },
     toggleDone(recipe) {
       const index = this.recipes.indexOf(recipe);
@@ -96,10 +99,7 @@ export default {
     updateProgress(recipeId, newProgress) {
       const recipe = this.recipes.find((r) => r.id === recipeId);
       if (recipe) {
-        recipe.progress = mockGetReecipePrecntag(
-          recipe,
-          this.$root.store.username
-        );
+        recipe.progress = newProgress;
       }
     },
   },
@@ -107,139 +107,211 @@ export default {
 </script>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
+/* General styles */
+body {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-attachment: fixed;
+}
+
+/* Container styles */
 .meal-planning-container {
+
   background-color: rgba(255, 255, 255, 0.95);
   padding: 20px;
   border-radius: 20px;
   max-width: 800px; /* Adjust the max-width to your desired width */
+
+  backdrop-filter: blur(10px);
+
+  background-image: url("https://t3.ftcdn.net/jpg/02/82/40/28/360_F_282402880_73Gx4lK3fUVOiLkJaAXtz77RxXm7QHaN.jpg");
+  background-size: contain;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 72px rgba(193, 59, 59, 0.741);
+  max-width: 1500px;
+
   margin: 0 auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* Recipe item styles */
 .recipe-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background-color: #ffffff;
+  border: 3px solid #dd0808;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
   width: 100%;
-  height: 130px; /* Adjust height as necessary */
-  padding: 15px;
-  margin-bottom: 15px;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: relative; /* Ensure relative positioning for absolute children */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.recipe-item:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .recipe-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.recipe-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
 }
 
 .remove-button {
+  background-color: transparent;
   border: none;
-  border-radius: 50%;
-  background-color: #dc3545;
-  color: white;
-  width: 30px;
-  height: 30px;
+  color: #dc3545;
+  font-size: 1.2rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1.2em;
-  line-height: 30px;
-  text-align: center;
+  transition: color 0.3s ease;
 }
 
 .remove-button:hover {
-  background-color: #c82333;
-  transform: rotate(90deg);
+  color: #c82333;
+}
+
+/* Recipe Preview styles */
+.recipe-preview-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 10px 0;
+}
+
+/* Checkbox styles */
+.progress-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
 }
 
 .checkbox-container {
-  display: inline-block;
-  position: relative;
-  padding-left: 35px;
-  margin-right: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-container input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  outline: none;
   cursor: pointer;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.checkbox-container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-.checkmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 25px;
-  width: 25px;
-  background-color: #eee;
-  border-radius: 50%;
-}
-
-.checkbox-container:hover input ~ .checkmark {
-  background-color: #ccc;
-}
-
-.checkbox-container input:checked ~ .checkmark {
+.checkbox-container input[type="checkbox"]:checked {
   background-color: #2196f3;
+  border-color: #2196f3;
 }
 
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
+.checkbox-container input[type="checkbox"]:checked::before {
+  content: "\2714";
+  display: flex;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  line-height: 16px;
 }
 
-.checkbox-container input:checked ~ .checkmark:after {
-  display: block;
+.checkbox-container label {
+  margin-left: 10px;
+  font-size: 0.9rem;
+  color: #555;
 }
 
-.checkbox-container .checkmark:after {
-  left: 9px;
-  top: 5px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  transform: rotate(45deg);
-}
-
-.remove-all-button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #dc3545;
-  color: white;
-  font-size: 1.1em;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.remove-all-button:hover {
-  background-color: #c82333;
-}
-
+/* Progress bar styles */
 .progress {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 20px; /* Adjust height of the progress bar container */
+  position: relative;
+  width: 80%;
+  height: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 .progress-bar {
   height: 100%;
-  background-color: #007bff; /* Choose your desired progress bar color */
+  background-color: #2196f3;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+
+/* Remove All button styles */
+.remove-all-button {
+  display: block;
+  width: 100%;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #dc3545;
   color: white;
-  text-align: center;
-  line-height: 20px; /* Ensure proper centering of text */
-  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.remove-all-button:hover {
+  background-color: #c82333;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.remove-all-button i {
+  margin-right: 8px;
+}
+
+/* Drag and Drop styles */
+.ghost-card {
+  opacity: 0.5;
+  background-color: #f8f8f8;
+  border: 1px dashed #ccc;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .meal-planning-container {
+    padding: 20px;
+  }
+  .recipe-item {
+    padding: 15px;
+  }
+  .recipe-header h2 {
+    font-size: 1rem;
+  }
+  .remove-button {
+    font-size: 1rem;
+  }
+  .checkbox-container label {
+    font-size: 0.8rem;
+  }
 }
 </style>

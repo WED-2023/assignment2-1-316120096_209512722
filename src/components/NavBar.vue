@@ -16,7 +16,7 @@
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <span class="user" v-if="$root.store.username">
         <b-button @click="$router.push({ name: 'MealPlanning' })"
-          >🍽 ({{ mealCount }})</b-button
+          >🍽 ({{ $root.store.count }})</b-button
         >
       </span>
 
