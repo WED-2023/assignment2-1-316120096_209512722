@@ -20,13 +20,15 @@
     "vue-cookies": "^1.8.3",
     "vue-router": "^3.2.0",
     "vuedraggable": "^2.24.3",
-    "vuelidate": "^0.7.5"
+    "vuelidate": "^0.7.5",
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-plugin-vuex": "~5.0.0",
-    "@vue/cli-service": "^3.3.1",
+    "@vue/cli-service": "^5.0.8",
     "@vue/eslint-config-prettier": "^6.0.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
