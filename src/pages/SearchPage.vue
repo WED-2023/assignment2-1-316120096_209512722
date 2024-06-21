@@ -185,24 +185,32 @@ export default {
     };
   },
   mounted() {
-    // Load last search query from localStorage on component mount
-    const lastSearchQuery = localStorage.getItem("lastSearchQuery");
-    console.log(this.$root.store.username, this.lastUserName);
+    const lastUserName = localStorage.getItem("lastUserName");
+
     if (
-      lastSearchQuery &&
       this.$root.store.username &&
-      this.$root.store.username === this.lastUserName
+      this.$root.store.username === lastUserName
     ) {
-      this.searchQuery = lastSearchQuery;
-      this.resultsCount = localStorage.getItem("resultsCount");
-      this.sortBy = localStorage.getItem("sortBy");
-      this.filterBy = localStorage.getItem("filerBy");
-      this.cuisineType = localStorage.getItem("cuisineType", this.cuisineType);
-      this.mealType = localStorage.getItem("mealType", this.mealType);
+      this.searchQuery = localStorage.getItem("lastSearchQuery") || "";
+      this.resultsCount =
+        parseInt(localStorage.getItem("resultsCount"), 10) || 5;
+      this.sortBy = localStorage.getItem("sortBy") || "likes";
+      this.filterBy = localStorage.getItem("filterBy") || "";
+      this.cuisineType = localStorage.getItem("cuisineType") || "";
+      this.mealType = localStorage.getItem("mealType") || "";
 
       // Optionally, you can trigger search here automatically
       this.searchRecipesHandler();
+    } else {
+      // Clear stored search data for a new user
+      localStorage.removeItem("lastSearchQuery");
+      localStorage.removeItem("resultsCount");
+      localStorage.removeItem("sortBy");
+      localStorage.removeItem("filterBy");
+      localStorage.removeItem("cuisineType");
+      localStorage.removeItem("mealType");
     }
+    localStorage.setItem("lastUserName", this.$root.store.username);
   },
   methods: {
     async searchRecipesHandler() {
@@ -226,6 +234,7 @@ export default {
           localStorage.setItem("filerBy", this.filterBy);
           localStorage.setItem("cuisineType", this.cuisineType);
           localStorage.setItem("mealType", this.mealType);
+          localStorage.setItem("lastUserName", this.lastUserName);
         } else localStorage.setItem("lastSearchQuery", "");
       } catch (error) {
         console.error("An error occurred while fetching the recipes:", error);
