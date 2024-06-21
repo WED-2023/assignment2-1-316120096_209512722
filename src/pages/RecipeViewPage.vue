@@ -69,6 +69,12 @@ import RecipeButton from "../components/MakeRecipeButton.vue";
 import { mockAddRecipe } from "../services/mealPlanning.js";
 
 export default {
+  data() {
+    return {
+      recipe: null,
+      recipeId: null,
+    };
+  },
   components: {
     RecipeButton,
   },
@@ -79,7 +85,7 @@ export default {
         "the recipe has been added to your meal plan",
         "success"
       );
-      mockAddRecipe(recipeId);
+      mockAddRecipe(this.recipeId, this.$root.store.username);
       this.$root.store.count++;
     },
   },

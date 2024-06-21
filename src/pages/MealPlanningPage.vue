@@ -14,10 +14,13 @@
       >
         <div class="recipe-header">
           <h2>{{ "Recipe " + (index + 1) }}</h2>
-          <button class="remove-button" @click="removeRecipe(index)">
-            <i class="fas fa-times"></i>
+          <div class="button-container">
             <MakeRecipeButton :recipeId="recipe.id" class="small-button" />
-          </button>
+
+            <button class="remove-button" @click="removeRecipe(index)">
+              x
+            </button>
+          </div>
         </div>
 
         <div class="recipe-preview-container">
@@ -83,6 +86,7 @@ export default {
       done: false,
       progress: mockGetReecipePrecntag(recipe, this.$root.store.username),
     }));
+    this.$root.store.count = this.recipes.length;
   },
   methods: {
     removeRecipe(index) {
@@ -112,6 +116,12 @@ export default {
 </script>
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+/* Add styles for the button container */
+.button-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Adjust the gap between buttons as needed */
+}
 
 /* General styles */
 body {
@@ -173,16 +183,22 @@ body {
 }
 
 .remove-button {
-  background-color: transparent;
+  background-color: #dc3545;
   border: none;
-  color: #dc3545;
+  border-radius: 50%;
+  color: white;
   font-size: 1.2rem;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .remove-button:hover {
-  color: #c82333;
+  background-color: #c82333;
 }
 
 /* MakeRecipeButton styles */

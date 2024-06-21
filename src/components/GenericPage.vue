@@ -13,12 +13,19 @@
         <p>{{ error }}</p>
       </div>
       <div v-else-if="items.length > 0" class="recipe-list">
-        <RecipePreview
+        <div
           v-for="recipe in items"
           :key="recipe.id"
-          :recipe="recipe"
-          class="recipe-item"
-        />
+          :class="isFamilyRecipe ? 'family-recipe' : 'recipe-item-container'"
+        >
+          <div class="recipe-header">
+            <div v-if="isFamilyRecipe" class="recipe-details">
+              <span class="recipe-creator">Made by: {{ recipe.whomade }}</span>
+              <span class="recipe-occasion">For: {{ recipe.whenmade }}</span>
+            </div>
+          </div>
+          <RecipePreview :recipe="recipe" class="recipe-item" />
+        </div>
       </div>
       <div v-else class="no-generic">
         <div class="empty-icon">📖</div>
@@ -40,6 +47,10 @@ export default {
     RecipePreview,
   },
   props: {
+    isFamilyRecipe: {
+      type: Boolean,
+      default: false,
+    },
     pageName: {
       type: String,
       required: true,
@@ -67,8 +78,10 @@ export default {
 
   computed: {
     backgroundStyle() {
-      return this.background
-        ? { backgroundImage: `url(${this.background})` }
+      return this.isFamilyRecipe
+        ? {
+            backgroundImage: `linear-gradient(-70deg, #ddd6f3 0%, #faaca8 100%, #faaca8 100%)`,
+          }
         : `linear-gradient(to top, #dfe9f3 0%, white 100%)`;
     },
   },

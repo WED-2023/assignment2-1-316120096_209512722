@@ -79,7 +79,7 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Open+Sans:wght@400;600&display=swap");
 
 .recipe-card {
-  max-width: 500px;
+  max-width: 800px;
   margin: 20px auto;
   perspective: 1000px; /* Adding perspective for 3D effect */
 }

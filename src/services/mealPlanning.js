@@ -30,8 +30,11 @@ export function mockGetmealPlanninglists(username) {
 export function getRecipeslen(username) {
   return mealPlanninglist.length;
 }
-export function mockAddRecipe(recipeDetails, usernamer) {
-  mealPlanninglist.push(recipeDetails);
+export function mockAddRecipe(recipeId, userName) {
+  console.log("recipe", recipeId, userName);
+  const recipe = recipe_preview.find((recipe) => recipe.id === recipeId);
+  console.log(recipe);
+  mealPlanninglist.push(recipe);
 
   return {
     status: 200,

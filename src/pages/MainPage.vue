@@ -27,7 +27,6 @@
           class="login-btn"
         >
           <span>Unlock More Deliciousness</span>
-          <i class="fas fa-sign-in-alt"></i>
         </router-link>
       </div>
       <RecipePreviewList
