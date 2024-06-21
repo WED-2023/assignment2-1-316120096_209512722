@@ -36,10 +36,15 @@
         :key="section.title"
       >
         <h2>{{ section.title }}</h2>
-        <p>{{ section.content }}</p>
-        <!-- Add LinkedIn button for the Contact Us section -->
+        <p v-if="!section.links">{{ section.content }}</p>
+        <ul v-else>
+          <li v-for="link in section.links" :key="link.text">
+            <a :href="link.url" target="_blank" class="project-link">{{
+              link.text
+            }}</a>
+          </li>
+        </ul>
       </div>
-
       <!-- Section: Contact Us -->
     </div>
 
@@ -75,6 +80,19 @@ export default {
           content: `We envision a future where technology enhances everyday life by 
           preserving and sharing valuable traditions like family recipes.
            Our goal is to leverage our skills to create solutions that bring people together and make daily tasks more enjoyable. We are driven by a desire to continue learning, growing, and contributing to the tech community`,
+        },
+        {
+          title: "Our Previous Projects",
+          links: [
+            {
+              text: "Arnold Schwarzenegger Page ",
+              url: " https://wed-2023.github.io/316120096",
+            },
+            {
+              text: "Grandpa Simpsons Page",
+              url: "https://wed-2023.github.io/209512722/",
+            },
+          ],
         },
       ],
       teamMembers: [
@@ -258,6 +276,16 @@ p:last-child {
   --secondary-color: #333333;
   --content-padding: 30px;
   --section-margin-bottom: 20px;
+}
+.project-link {
+  color: #0077b5;
+  text-decoration: none;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.project-link:hover {
+  color: #005582;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes slideInUp {
