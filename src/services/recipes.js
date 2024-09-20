@@ -1,8 +1,9 @@
 // src/services/recipes.js
 import recipe_full_view from "../assets/mocks/recipe_full_view.json";
 import recipe_preview from "../assets/mocks/recipe_preview.json";
+import axios from "axios";
 
-export function mockGetRecipesPreview(amount = 1) {
+export async function mockGetRecipesPreview(amount = 1) {
   let recipes = [];
   for (let i = 0; i < amount; i++) {
     recipes.push(...recipe_preview);
@@ -16,26 +17,31 @@ export function mockGetRecipesPreview(amount = 1) {
  * @param {number} [amount=1] - The number of recipe previews to retrieve.
  * @returns {Object} - An object containing an array of recipe previews.
  */
-export function mockGetRecipesPreviewRandom(amount = 1) {
-  let recipes = [];
-  let usedIndices = [];
+export async function mockGetRecipesPreviewRandom(amount = 1) {
+  try {
+    // Call Spoonacular API to get random recipes
+    const response = await axios.get(
+      `https://api.spoonacular.com/recipes/random`,
+      {
+        params: {
+          number: amount,
+          apiKey: "82d181759f064ccb9fb29c272c319613",
+        },
+      }
+    );
 
-  // Select random recipes from the array
-  for (let i = 0; i < amount; i++) {
-    // Generate a random index within the range of the recipe preview array
-    let randomIndex;
-    do {
-      randomIndex = Math.floor(Math.random() * recipe_preview.length);
-    } while (usedIndices.includes(randomIndex));
+    // The response will contain the list of recipes
+    const recipes = response.data.recipes;
 
-    // Add the recipe at the random index to the recipes array
-    recipes.push(recipe_preview[randomIndex]);
-    usedIndices.push(randomIndex);
+    // Return the data in a similar structure to your previous mock
+    return { data: { recipes: recipes } };
+  } catch (error) {
+    console.error("Error fetching recipes:", error);
+    return { data: { recipes: [] } }; // Return an empty list on error
   }
-
-  // Return an object containing the array of recipe previews
-  return { data: { recipes: recipes } };
 }
+
+// Return an object containing the array of recipe previews
 
 export function mockGetRecipeFullDetails(recipeId) {
   for (let i = 0; i < recipe_full_view.length; i++) {
