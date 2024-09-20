@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { mocksearchRecipes } from "../services/recipes.js";
+import { searchRecipes } from "../services/recipes.js";
 import RecipeDetails from "../components/RecipeDetails.vue";
 import RecipePreview from "../components/RecipePreview.vue";
 
@@ -218,7 +218,7 @@ export default {
 
       this.loading = true;
       try {
-        this.filteredRecipes = await mocksearchRecipes({
+        this.filteredRecipes = await searchRecipes({
           query: this.searchQuery,
           resultsCount: this.resultsCount,
           sortBy: this.sortBy,
@@ -253,10 +253,7 @@ export default {
 </script>
 
 <style scoped>
-/* Container */
-/* Container */
-/* Container */
-/* Container */
+
 .container {
   padding: 20px;
   max-width: 1000px;

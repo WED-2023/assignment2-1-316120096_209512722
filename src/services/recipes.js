@@ -1,49 +1,61 @@
 // src/services/recipes.js
 import recipe_full_view from "../assets/mocks/recipe_full_view.json";
 import recipe_preview from "../assets/mocks/recipe_preview.json";
+export const SPOONACULAR_API_KEY = 'a3b4f56bddf7424da3ab020405a6c4ca';
+import axios from "axios";
 
-export function mockGetRecipesPreview(amount = 1) {
-  let recipes = [];
-  for (let i = 0; i < amount; i++) {
-    recipes.push(...recipe_preview);
-  }
-
-  return { data: { recipes: recipes } };
-}
 /**
  * Get a random selection of recipe previews.
  *
  * @param {number} [amount=1] - The number of recipe previews to retrieve.
  * @returns {Object} - An object containing an array of recipe previews.
  */
-export function mockGetRecipesPreviewRandom(amount = 1) {
-  let recipes = [];
-  let usedIndices = [];
+export async function getRecipesPreviewRandom(amount = 1) {
+  try {
+    // Call Spoonacular API to get random recipes
+    const response = await axios.get(
+      `https://api.spoonacular.com/recipes/random`,
+      {
+        params: {
+          number: amount,
+          apiKey: SPOONACULAR_API_KEY,
+        },
+      }
+    );
 
-  // Select random recipes from the array
-  for (let i = 0; i < amount; i++) {
-    // Generate a random index within the range of the recipe preview array
-    let randomIndex;
-    do {
-      randomIndex = Math.floor(Math.random() * recipe_preview.length);
-    } while (usedIndices.includes(randomIndex));
+    // The response will contain the list of recipes
+    const recipes = response.data.recipes;
 
-    // Add the recipe at the random index to the recipes array
-    recipes.push(recipe_preview[randomIndex]);
-    usedIndices.push(randomIndex);
+    // Return the data in a similar structure to your previous mock
+    return { data: { recipes: recipes } };
+  } catch (error) {
+    console.error("Error fetching recipes:", error);
+    return { data: { recipes: [] } }; // Return an empty list on error
   }
-
-  // Return an object containing the array of recipe previews
-  return { data: { recipes: recipes } };
 }
 
-export function mockGetRecipeFullDetails(recipeId) {
-  for (let i = 0; i < recipe_full_view.length; i++) {
-    if (recipe_full_view[i].id === recipeId) {
-      return { status: 200, data: { recipe: recipe_full_view[i] } };
-    }
+export async function getRecipeFullDetails(recipeId) {
+  try {
+    // Call Spoonacular API to get random recipes
+    const response = await axios.get(
+      `https://api.spoonacular.com/recipes/${recipeId}/information
+`,
+      {
+        params: {
+          apiKey: SPOONACULAR_API_KEY,
+        },
+      }
+    );
+
+    // The response will contain the list of recipes
+    const recipes = response.data.recipes;
+
+    // Return the data in a similar structure to your previous mock
+    return { data: { recipes: recipes } };
+  } catch (error) {
+    console.error("Error fetching recipes:", error);
+    return { data: { recipes: [] } }; // Return an empty list on error
   }
-  return { status: 200, data: {} };
 }
 
 export function mockAddUserRecipes(recipeDetails) {
@@ -82,7 +94,7 @@ export function mockAddUserRecipes(recipeDetails) {
   };
 }
 
-export async function mocksearchRecipes({
+export async function searchRecipes({
   query,
   resultsCount,
   sortBy,
@@ -96,16 +108,25 @@ export async function mocksearchRecipes({
   }
 
   try {
-    const response = await mockGetRecipesPreview();
-    console.log(response);
-    if (response.data.recipes.length !== 0) {
-      let recipes = response.data.recipes;
+    // Fetch recipes from Spoonacular API
+    const response = await axios.get(`https://api.spoonacular.com/recipes/complexSearch`, {
+      params: {
+        query: searchQuery ? searchQuery : null,
+        number: resultsCount || 100, // Get a large number of results to apply filters later
+        addRecipeInformation: true, // Adds details about recipes
+        apiKey: SPOONACULAR_API_KEY,
+        diet: filterBy ? filterBy : null,
+        cuisine: cuisineType ? cuisineType : null,
+        type: mealType ? mealType : null,
+        sort: sortBy ? sortBy : null,
 
-      // Filter recipes by search query
-      recipes = recipes.filter((recipe) =>
-        recipe.title.toLowerCase().includes(searchQuery)
-      );
+      },
+    });
 
+    if (response.data.results.length !== 0) {
+      let recipes = response.data.results;
+
+      
       // Apply additional filters
       if (filterBy) {
         if (filterBy === "vegetarian") {
@@ -117,16 +138,17 @@ export async function mocksearchRecipes({
         }
       }
 
+      // Filter by cuisineType
       if (cuisineType) {
         recipes = recipes.filter((recipe) =>
           recipe.cuisines.includes(cuisineType)
         );
       }
 
-      // Filter by mealType (checks if mealType is in the list of meal types for each recipe)
+      // Filter by mealType
       if (mealType) {
         recipes = recipes.filter((recipe) =>
-          recipe.mealTypes.includes(mealType)
+          recipe.dishTypes.includes(mealType)
         );
       }
 

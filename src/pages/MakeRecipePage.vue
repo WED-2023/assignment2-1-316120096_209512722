@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { mockgetRecipeInstructions } from "../services/mealPlanning.js";
+import { getRecipeInstructions } from "../services/mealPlanning.js";
 import FixRecipeMake from "../components/FixRecipeMake.vue";
 
 export default {
@@ -85,7 +85,7 @@ export default {
   async created() {
     try {
       this.loading = true;
-      const result = await mockgetRecipeInstructions(this.recipeId);
+      const result = await getRecipeInstructions(this.recipeId);
       if (result.error) {
         this.error = result.error;
       } else {

@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { mockGetRecipeInfo } from "../services/mealPlanning.js";
+import { mockgetRecipeInfo } from "../services/mealPlanning.js";
 
 export default {
   data() {
@@ -62,7 +62,7 @@ export default {
   methods: {
     async fetchRecipeInfo() {
       try {
-        this.recipe = await mockGetRecipeInfo();
+        this.recipe = await mockgetRecipeInfo(this.recipe.id);
         this.servings = this.recipe.servings;
       } catch (error) {
         console.error("Error fetching recipe information:", error);

@@ -64,7 +64,7 @@
   </div>
 </template>
 <script>
-import { mockGetRecipeFullDetails } from "../services/recipes.js";
+import { getRecipeFullDetails } from "../services/recipes.js";
 import RecipeButton from "../components/MakeRecipeButton.vue";
 import { mockAddRecipe } from "../services/mealPlanning.js";
 
@@ -76,7 +76,7 @@ export default {
     };
   },
   components: {
-    RecipeButton,
+RecipeButton,
   },
   methods: {
     addToMealPlan(recipeId) {
@@ -89,19 +89,16 @@ export default {
       this.$root.store.count++;
     },
   },
-  data() {
-    return {
-      recipe: null,
-      recipeId: null,
-    };
-  },
   async created() {
+    console.log("id",this.$route.params.recipeId);
+
     try {
       this.recipeId = this.$route.params.recipeId;
 
       let response;
-      response = mockGetRecipeFullDetails(this.$route.params.recipeId);
-
+      console.log("id",this.$route.params.recipeId);
+      response = await getRecipeFullDetails(this.$route.params.recipeId);
+      console.log("response",response);
       if (response.status !== 200) this.$router.replace("/NotFound");
 
       let {

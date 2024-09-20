@@ -18,7 +18,7 @@
 
 <script>
 import RecipePreview from "./RecipePreview.vue";
-import { mockGetRecipesPreviewRandom } from "../services/recipes.js";
+import { getRecipesPreviewRandom } from "../services/recipes.js";
 
 export default {
   name: "RecipePreviewList",
@@ -28,7 +28,8 @@ export default {
   props: {
     userName: {
       type: String,
-      required: true,
+      required: false,
+      default : "",
     },
     title: {
       type: String,
@@ -47,7 +48,7 @@ export default {
     async updateRecipes() {
       try {
         const amountToFetch = 3; // Fetching 3 random recipes
-        const response = mockGetRecipesPreviewRandom(amountToFetch);
+        const response = await getRecipesPreviewRandom(amountToFetch);
         this.recipes = response.data.recipes;
       } catch (error) {
         console.log(error);
