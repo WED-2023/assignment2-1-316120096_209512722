@@ -70,7 +70,7 @@ export default {
   },
   props: {
     recipeId: {
-      type: Number,
+      type: [String, Number], // Allow both String and Number
       required: true,
     },
   },
@@ -85,11 +85,13 @@ export default {
   async created() {
     try {
       this.loading = true;
+      console.log(this.recipeId, "recipeId in the seconed page");
       const result = await mockgetRecipeInstructions(this.recipeId);
+      console.log(this.recipeId);
       if (result.error) {
         this.error = result.error;
       } else {
-        this.instructions = result;
+        this.instructions = result.data.steps;
         this.completedSteps = Object.fromEntries(
           result.map((_, index) => [index, false])
         );

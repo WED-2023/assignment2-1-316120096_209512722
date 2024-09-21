@@ -43,13 +43,24 @@ export async function mockGetRecipesPreviewRandom(amount = 1) {
 
 // Return an object containing the array of recipe previews
 
-export function mockGetRecipeFullDetails(recipeId) {
-  for (let i = 0; i < recipe_full_view.length; i++) {
-    if (recipe_full_view[i].id === recipeId) {
-      return { status: 200, data: { recipe: recipe_full_view[i] } };
-    }
+export async function mockGetRecipeFullDetails(recipeId) {
+  try {
+    // Call Spoonacular API to get full details of the recipe by ID
+    const response = await axios.get(
+      `https://api.spoonacular.com/recipes/${recipeId}/information`,
+      {
+        params: {
+          apiKey: "82d181759f064ccb9fb29c272c319613",
+        },
+      }
+    );
+
+    // Return the data in a similar structure to your previous mock
+    return { status: 200, data: { recipe: response.data } };
+  } catch (error) {
+    console.error("Error fetching recipe details:", error);
+    return { status: 500, data: {} }; // Return an empty object on error
   }
-  return { status: 200, data: {} };
 }
 
 export function mockAddUserRecipes(recipeDetails) {

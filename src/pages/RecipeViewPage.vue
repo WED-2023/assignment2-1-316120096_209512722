@@ -5,8 +5,7 @@
         <h1 class="recipe-title">{{ recipe.title }}</h1>
         <div class="button-container">
           <RecipeButton
-            class="recipe-button"
-            :recipeId="recipeId"
+            :recipeId="String(recipeId)"
             buttonText="Make this recipe"
           />
           <button class="meal-plan-btn" @click="addToMealPlan">
@@ -89,21 +88,21 @@ export default {
       this.$root.store.count++;
     },
   },
-  data() {
-    return {
-      recipe: null,
-      recipeId: null,
-    };
-  },
   async created() {
     try {
+      // Get the recipeId from the route parameters
       this.recipeId = this.$route.params.recipeId;
 
-      let response;
-      response = mockGetRecipeFullDetails(this.$route.params.recipeId);
+      // Await the response from the mockGetRecipeFullDetails function
+      let response = await mockGetRecipeFullDetails(this.recipeId);
 
-      if (response.status !== 200) this.$router.replace("/NotFound");
+      // Check if the response status is not 200 and redirect to NotFound page
+      if (response.status !== 200 || !response.data.recipe) {
+        this.$router.replace("/NotFound");
+        return; // Exit early if the recipe was not found
+      }
 
+      // Destructure the response to get recipe details
       let {
         analyzedInstructions,
         instructions,
@@ -114,15 +113,20 @@ export default {
         servings,
         image,
         title,
+        id,
       } = response.data.recipe;
 
+      // Process the instructions (if there are analyzed instructions)
       let _instructions = analyzedInstructions
         .map((fstep) => {
-          fstep.steps[0].step = fstep.name + fstep.steps[0].step;
+          if (fstep.steps && fstep.steps.length > 0) {
+            fstep.steps[0].step = fstep.name + fstep.steps[0].step;
+          }
           return fstep.steps;
         })
         .reduce((a, b) => [...a, ...b], []);
 
+      // Create the final _recipe object
       let _recipe = {
         instructions,
         _instructions,
@@ -134,11 +138,17 @@ export default {
         servings,
         image,
         title,
+        id,
       };
 
+      // Assign the recipe to the component's data
       this.recipe = _recipe;
+      this.recipeId = id;
+
+      this.recipeId = this.recipe.id;
+      console.log(this.recipe.id, "recipeId");
     } catch (error) {
-      console.log(error);
+      console.log("Error fetching recipe:", error);
     }
   },
 };
