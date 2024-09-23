@@ -42,6 +42,12 @@
 import { mockGetRecipeInfo } from "../services/mealPlanning.js";
 
 export default {
+  props: {
+    recipeId: {
+      type: Number,
+      required: true,
+    },
+  },
   data() {
     return {
       recipe: {},
@@ -62,11 +68,16 @@ export default {
   methods: {
     async fetchRecipeInfo() {
       try {
-        this.recipe = await mockGetRecipeInfo();
+        console.log("this recipeId", this.$root.recipe);
+        console.log("this recipeId", this.recipeId); // Corrected
+        this.recipe = await mockGetRecipeInfo(this.recipeId);
         this.servings = this.recipe.servings;
       } catch (error) {
         console.error("Error fetching recipe information:", error);
       }
+    },
+    handleImageError(event) {
+      event.target.src = "/path/to/default-image.jpg"; // Fallback image handling
     },
     updateServings(value) {
       this.servings = Math.max(1, this.servings + value);

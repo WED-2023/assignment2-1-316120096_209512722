@@ -25,7 +25,7 @@ export async function mockGetRecipesPreviewRandom(amount = 1) {
       {
         params: {
           number: amount,
-          apiKey: "82d181759f064ccb9fb29c272c319613",
+          apiKey: "a2627e0fb27042d2b386078fda160ee9",
         },
       }
     );
@@ -50,7 +50,7 @@ export async function mockGetRecipeFullDetails(recipeId) {
       `https://api.spoonacular.com/recipes/${recipeId}/information`,
       {
         params: {
-          apiKey: "82d181759f064ccb9fb29c272c319613",
+          apiKey: "a2627e0fb27042d2b386078fda160ee9",
         },
       }
     );
@@ -61,42 +61,6 @@ export async function mockGetRecipeFullDetails(recipeId) {
     console.error("Error fetching recipe details:", error);
     return { status: 500, data: {} }; // Return an empty object on error
   }
-}
-
-export function mockAddUserRecipes(recipeDetails) {
-  let userRecipes = []; // Define userRecipes array
-  const title = recipeDetails.get("title");
-  const image = recipeDetails.get("image");
-  const description = recipeDetails.get("description");
-  const readyInMinutes = recipeDetails.get("readyInMinutes");
-  const instructions = JSON.parse(recipeDetails.get("instructions"));
-  const ingredients = JSON.parse(recipeDetails.get("ingredients"));
-
-  // Generate a simple unique ID using timestamp and random number
-  const newRecipeId = Math.floor(1000 + Math.random() * 9000);
-
-  const newRecipe = {
-    id: newRecipeId,
-    title: title,
-    image: image, // Here, 'image' should be the URL/path where the image is stored
-    description: description,
-    readyInMinutes: parseInt(readyInMinutes),
-    instructions: instructions,
-    ingredients: ingredients,
-  };
-
-  userRecipes.push(newRecipe); // Push the new recipe to userRecipes array
-  console.log(userRecipes, "userRecipes");
-  return {
-    status: 200,
-    response: {
-      data: {
-        message: "The Recipe successfully added to My Recipes",
-        success: true,
-        recipeId: newRecipeId, // Optionally return the new recipe ID
-      },
-    },
-  };
 }
 
 export async function mocksearchRecipes({
@@ -113,57 +77,56 @@ export async function mocksearchRecipes({
   }
 
   try {
-    const response = await mockGetRecipesPreview();
-    console.log(response);
-    if (response.data.recipes.length !== 0) {
-      let recipes = response.data.recipes;
+    // Set up the API request parameters
+    let params = {
+      query: searchQuery,
+      number: resultsCount,
+      apiKey: "a2627e0fb27042d2b386078fda160ee9",
+    };
 
-      // Filter recipes by search query
-      recipes = recipes.filter((recipe) =>
-        recipe.title.toLowerCase().includes(searchQuery)
-      );
-
-      // Apply additional filters
-      if (filterBy) {
-        if (filterBy === "vegetarian") {
-          recipes = recipes.filter((recipe) => recipe.vegetarian);
-        } else if (filterBy === "vegan") {
-          recipes = recipes.filter((recipe) => recipe.vegan);
-        } else if (filterBy === "gluten free") {
-          recipes = recipes.filter((recipe) => recipe.glutenFree);
-        }
+    // Add optional filters to the params
+    if (filterBy) {
+      if (filterBy === "vegetarian") {
+        params.diet = "vegetarian";
+      } else if (filterBy === "vegan") {
+        params.diet = "vegan";
+      } else if (filterBy === "gluten free") {
+        params.intolerances = "gluten";
       }
+    }
 
-      if (cuisineType) {
-        recipes = recipes.filter((recipe) =>
-          recipe.cuisines.includes(cuisineType)
-        );
-      }
+    if (cuisineType) {
+      params.cuisine = cuisineType;
+    }
 
-      // Filter by mealType (checks if mealType is in the list of meal types for each recipe)
-      if (mealType) {
-        recipes = recipes.filter((recipe) =>
-          recipe.mealTypes.includes(mealType)
-        );
-      }
+    if (mealType) {
+      params.type = mealType;
+    }
 
-      // Sort recipes
-      recipes.sort((a, b) => {
-        if (sortBy === "likes") {
-          return b.aggregateLikes - a.aggregateLikes;
-        } else if (sortBy === "time") {
-          return a.readyInMinutes - b.readyInMinutes;
-        }
-      });
+    // Sort by time or popularity (Spoonacular supports sorting by "popularity" and "time")
+    if (sortBy === "likes") {
+      params.sort = "popularity";
+    } else if (sortBy === "time") {
+      params.sort = "time";
+    }
 
-      // Apply the resultsCount limit
-      return recipes.slice(0, resultsCount);
+    // Call Spoonacular API to search for recipes
+    const response = await axios.get(
+      `https://api.spoonacular.com/recipes/complexSearch`,
+      { params }
+    );
+
+    // Extract recipes from the API response
+    const recipes = response.data.results;
+
+    if (recipes && recipes.length > 0) {
+      return recipes.slice(0, resultsCount); // Return the limited number of results
     } else {
-      console.error("Recipes not found");
+      console.error("No recipes found");
       return [];
     }
   } catch (error) {
-    console.error("An error occurred while fetching the recipes:", error);
+    console.error("An error occurred while searching for recipes:", error);
     return [];
   }
 }

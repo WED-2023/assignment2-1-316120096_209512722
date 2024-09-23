@@ -5,8 +5,6 @@ import GetAnalyzedRecipeInstructions from "../assets/mocks/GetAnalyzedRecipeInst
 import GetRecipeInformation from "../assets/mocks/GetRecipeInformation.json";
 import axios from "axios";
 let mealPlanninglist = [...recipe_preview].slice(0, 3);
-const recipeInstructions = GetAnalyzedRecipeInstructions;
-const recipeFullInfo = GetRecipeInformation;
 const reciPoggres = 0;
 let myMap = {};
 for (let key in mealPlanninglist) {
@@ -64,7 +62,7 @@ export async function mockgetRecipeInstructions(recipeId, userName) {
       `https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions`,
       {
         params: {
-          apiKey: "82d181759f064ccb9fb29c272c319613", // Your Spoonacular API key
+          apiKey: "a2627e0fb27042d2b386078fda160ee9", // Your Spoonacular API key
         },
       }
     );
@@ -82,8 +80,12 @@ export async function mockgetRecipeInstructions(recipeId, userName) {
   }
 }
 
-export async function mockGetRecipeInfo() {
-  let recipe = recipeFullInfo;
+export async function mockGetRecipeInfo(recipeid) {
+  let response = await mockGetRecipeFullDetails(recipeid);
+
+  // Destructure the recipe object from response
+  let recipe = response.data.recipe;
+
   return {
     id: recipe.id,
     title: recipe.title,

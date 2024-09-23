@@ -3,10 +3,11 @@
     <div v-if="recipe" class="recipe-container">
       <div class="recipe-header">
         <h1 class="recipe-title">{{ recipe.title }}</h1>
-        <div class="button-container">
+        <div class="button-container" v-if="recipeId">
           <RecipeButton
             :recipeId="String(recipeId)"
             buttonText="Make this recipe"
+            @click="navigateToMakeRecipe"
           />
           <button class="meal-plan-btn" @click="addToMealPlan">
             Add to meal plan
@@ -92,6 +93,10 @@ export default {
     try {
       // Get the recipeId from the route parameters
       this.recipeId = this.$route.params.recipeId;
+      console.log(
+        "this.recipeId in veiw page by route parmater",
+        this.recipeId
+      );
 
       // Await the response from the mockGetRecipeFullDetails function
       let response = await mockGetRecipeFullDetails(this.recipeId);
@@ -143,9 +148,12 @@ export default {
 
       // Assign the recipe to the component's data
       this.recipe = _recipe;
-      this.recipeId = id;
 
-      this.recipeId = this.recipe.id;
+      // Reassign this.recipeId if it's not already set
+      if (!this.recipeId && this.recipe.id) {
+        this.recipeId = this.recipe.id;
+      }
+
       console.log(this.recipe.id, "recipeId");
     } catch (error) {
       console.log("Error fetching recipe:", error);

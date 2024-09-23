@@ -26,6 +26,7 @@ const routes = [
     path: "/recipe/:recipeId",
     name: "recipe",
     component: () => import("./pages/RecipeViewPage"),
+    props: true,
   },
   {
     path: "/about/",
@@ -61,6 +62,7 @@ const routes = [
     path: "/:MakeRecipeid",
     name: "MakeRecipeid",
     component: () => import("./pages/MakeRecipePage"),
+    props: true, // This will pass the route params as props to the component
   },
 ];
 
