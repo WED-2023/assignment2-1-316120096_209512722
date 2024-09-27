@@ -6,7 +6,7 @@
 export default {
   props: {
     recipeId: {
-      type: String,
+      type: [String, Number],
       required: true,
     },
     buttonText: {
@@ -14,12 +14,16 @@ export default {
       default: "Make this recipe",
     },
   },
+
   methods: {
     navigateToRecipe() {
       this.$router.push({
         name: "MakeRecipeid",
-        params: { recipeId: this.recipeId },
+        params: { recipeId: this.recipeId }, // Use 'MakeRecipeid' as the parameter name
       });
+    },
+    mounted() {
+      console.log("Received recipeId in RecipeButton:", this.recipeId);
     },
   },
 };

@@ -1,7 +1,7 @@
 <template>
   <div class="recipe-instructions">
     <h1 class="title">Recipe Instructions</h1>
-    <FixRecipeMake />
+    <FixRecipeMake :recipeId="recipeId" />
     <div v-if="loading" class="loading">
       <div class="spinner"></div>
       <p>Loading recipe instructions...</p>
@@ -70,7 +70,7 @@ export default {
   },
   props: {
     recipeId: {
-      type: Number,
+      type: [String, Number], // Allow both String and Number
       required: true,
     },
   },
@@ -84,14 +84,19 @@ export default {
   },
   async created() {
     try {
+      console.log(this.$route.params.recipeId);
       this.loading = true;
       const result = await mockgetRecipeInstructions(this.recipeId);
+
       if (result.error) {
         this.error = result.error;
       } else {
-        this.instructions = result;
+        // Assuming the response contains an array of steps
+        this.instructions = result[0]?.steps || [];
+
+        // Initializing the completedSteps for each instruction
         this.completedSteps = Object.fromEntries(
-          result.map((_, index) => [index, false])
+          this.instructions.map((_, index) => [index, false])
         );
       }
     } catch (error) {

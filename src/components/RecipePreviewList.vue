@@ -29,6 +29,7 @@ export default {
     userName: {
       type: String,
       required: true,
+      default: "", // Default to an empty string
     },
     title: {
       type: String,
@@ -47,7 +48,7 @@ export default {
     async updateRecipes() {
       try {
         const amountToFetch = 3; // Fetching 3 random recipes
-        const response = mockGetRecipesPreviewRandom(amountToFetch);
+        const response = await mockGetRecipesPreviewRandom(amountToFetch); // Await the promise
         this.recipes = response.data.recipes;
       } catch (error) {
         console.log(error);
