@@ -89,7 +89,7 @@
         />
         <h3 class="image-title">{{ recipe.title }}</h3>
       </div>
-      <div class="recipe-info">
+      <div class="recipe-info" v-if="!currentUrl.includes('search')">
         <p>{{ recipe.summary | truncate(60) }}</p>
         <div class="recipe-meta">
           <span>
@@ -220,6 +220,7 @@ export default {
       image_load: true,
       watchedRecipes: [],
       favoriteRecipes: [],
+      currentUrl: this.$route.fullPath,
     };
   },
   props: {
