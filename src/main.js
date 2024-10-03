@@ -66,11 +66,12 @@ Vue.use(VueAxios, axios);
 
 Vue.config.productionTip = false;
 
-const SERVER_API_ENDPOINT = "Omer-Kitchen.cs.bgu.ac.il."
+
+const SERVER_API_ENDPOINT = "https://Omer-Kitchen.cs.bgu.ac.il";
 
 export const api = axios.create({
   baseURL: SERVER_API_ENDPOINT,
-  withCredentials: true,
+  withCredentials: true, // Assuming your backend needs credentials like cookies or sessions
 });
 
 
