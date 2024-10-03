@@ -1,8 +1,15 @@
-// src/services/recipes.js
 import recipe_full_view from "../assets/mocks/recipe_full_view.json";
 import recipe_preview from "../assets/mocks/recipe_preview.json";
-import axios from "axios";
+import { api } from "../main.js"; // Importing the new axios instance
 
+const API_ROUTE_PREFIX = "recipes";
+
+/**
+ * Get a preview of recipes (mock).
+ *
+ * @param {number} [amount=1] - The number of recipe previews to retrieve.
+ * @returns {Object} - An object containing an array of recipe previews.
+ */
 export async function mockGetRecipesPreview(amount = 1) {
   let recipes = [];
   for (let i = 0; i < amount; i++) {
@@ -11,58 +18,60 @@ export async function mockGetRecipesPreview(amount = 1) {
 
   return { data: { recipes: recipes } };
 }
+
 /**
- * Get a random selection of recipe previews.
+ * Get a random selection of recipe previews from the API.
  *
  * @param {number} [amount=1] - The number of recipe previews to retrieve.
  * @returns {Object} - An object containing an array of recipe previews.
  */
 export async function mockGetRecipesPreviewRandom(amount = 1) {
   try {
-    // Call Spoonacular API to get random recipes
-    const response = await axios.get(
-      `https://api.spoonacular.com/recipes/random`,
-      {
-        params: {
-          number: amount,
-          apiKey: "a2627e0fb27042d2b386078fda160ee9",
-        },
-      }
-    );
+    // Call the new API
+    const response = await api.get(`${API_ROUTE_PREFIX}/random`, {
+      params: {
+        number: amount,
+      },
+    });
 
-    // The response will contain the list of recipes
     const recipes = response.data.recipes;
-
-    // Return the data in a similar structure to your previous mock
     return { data: { recipes: recipes } };
   } catch (error) {
-    console.error("Error fetching recipes:", error);
-    return { data: { recipes: [] } }; // Return an empty list on error
+    console.error("Error fetching random recipes:", error);
+    return { data: { recipes: [] } };
   }
 }
 
-// Return an object containing the array of recipe previews
-
+/**
+ * Get full recipe details by recipe ID from the API.
+ *
+ * @param {string} recipeId - The ID of the recipe to retrieve details for.
+ * @returns {Object} - An object containing the recipe details.
+ */
 export async function mockGetRecipeFullDetails(recipeId) {
   try {
-    // Call Spoonacular API to get full details of the recipe by ID
-    const response = await axios.get(
-      `https://api.spoonacular.com/recipes/${recipeId}/information`,
-      {
-        params: {
-          apiKey: "a2627e0fb27042d2b386078fda160ee9",
-        },
-      }
-    );
+    // Call the new API
+    const response = await api.get(`${API_ROUTE_PREFIX}/${recipeId}`);
 
-    // Return the data in a similar structure to your previous mock
     return { status: 200, data: { recipe: response.data } };
   } catch (error) {
     console.error("Error fetching recipe details:", error);
-    return { status: 500, data: {} }; // Return an empty object on error
+    return { status: 500, data: {} };
   }
 }
 
+/**
+ * Search for recipes with various filters and sorting options.
+ *
+ * @param {Object} options - The search parameters.
+ * @param {string} options.query - The search query.
+ * @param {number} options.resultsCount - Number of results to return.
+ * @param {string} options.sortBy - Sorting option ('likes' or 'time').
+ * @param {string} options.filterBy - Filtering option ('vegetarian', 'vegan', etc.).
+ * @param {string} options.cuisineType - The type of cuisine to filter by.
+ * @param {string} options.mealType - The type of meal to filter by.
+ * @returns {Array} - An array of recipes that match the search criteria.
+ */
 export async function mocksearchRecipes({
   query,
   resultsCount,
@@ -81,7 +90,6 @@ export async function mocksearchRecipes({
     let params = {
       query: searchQuery,
       number: resultsCount,
-      apiKey: "a2627e0fb27042d2b386078fda160ee9",
     };
 
     // Add optional filters to the params
@@ -103,28 +111,20 @@ export async function mocksearchRecipes({
       params.type = mealType;
     }
 
-    // Sort by time or popularity (Spoonacular supports sorting by "popularity" and "time")
+    // Sort by time or popularity
     if (sortBy === "likes") {
       params.sort = "popularity";
     } else if (sortBy === "time") {
       params.sort = "time";
     }
 
-    // Call Spoonacular API to search for recipes
-    const response = await axios.get(
-      `https://api.spoonacular.com/recipes/complexSearch`,
-      { params }
-    );
+    // Call the new API for complex search
+    const response = await api.get(`${API_ROUTE_PREFIX}/search`, {
+      params,
+    });
 
-    // Extract recipes from the API response
     const recipes = response.data.results;
-
-    if (recipes && recipes.length > 0) {
-      return recipes.slice(0, resultsCount); // Return the limited number of results
-    } else {
-      console.error("No recipes found");
-      return [];
-    }
+    return recipes.length > 0 ? recipes.slice(0, resultsCount) : [];
   } catch (error) {
     console.error("An error occurred while searching for recipes:", error);
     return [];

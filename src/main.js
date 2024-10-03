@@ -66,6 +66,14 @@ Vue.use(VueAxios, axios);
 
 Vue.config.productionTip = false;
 
+const SERVER_API_ENDPOINT = "Omer-Kitchen.cs.bgu.ac.il."
+
+export const api = axios.create({
+  baseURL: SERVER_API_ENDPOINT,
+  withCredentials: true,
+});
+
+
 const shared_data = Vue.observable({
   server_domain: "http://localhost:3000",
   username: localStorage.username,
