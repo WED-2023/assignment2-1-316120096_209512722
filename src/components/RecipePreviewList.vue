@@ -48,12 +48,28 @@ export default {
     async updateRecipes() {
       try {
         const amountToFetch = 3; // Fetching 3 random recipes
-        const response = await mockGetRecipesPreviewRandom(amountToFetch); // Await the promise
-        this.recipes = response.data.recipes;
+        const response = await mockGetRecipesPreviewRandom(amountToFetch);
+
+        // Assuming the response is an array of recipe objects
+        console.log(response); // Log the entire response
+
+        if (Array.isArray(response)) {
+          this.recipes = response; // Directly set the response if it's an array
+        } else if (response.data && Array.isArray(response.data)) {
+          this.recipes = response.data; // Set the data property if response has it
+        } else {
+          console.error("Unexpected response format", response);
+        }
       } catch (error) {
-        console.log(error);
+        console.log("Error fetching recipes", error);
       }
     },
+
+    fetchDifferentRecipes() {
+      this.updateRecipes(); // Call updateRecipes method
+      this.$emit("recipes-updated"); // Emit a custom event
+    },
+
     fetchDifferentRecipes() {
       this.updateRecipes(); // Call updateRecipes method
       this.$emit("recipes-updated"); // Emit a custom event

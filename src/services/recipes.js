@@ -1,8 +1,9 @@
 import recipe_full_view from "../assets/mocks/recipe_full_view.json";
 import recipe_preview from "../assets/mocks/recipe_preview.json";
-import { api } from "../main.js"; // Importing the new axios instance
 
-const API_ROUTE_PREFIX = "recipes";
+import axios from "axios";
+
+axios.defaults.baseURL = "http://localhost:3000";
 
 /**
  * Get a preview of recipes (mock).
@@ -27,18 +28,15 @@ export async function mockGetRecipesPreview(amount = 1) {
  */
 export async function mockGetRecipesPreviewRandom(amount = 1) {
   try {
-    // Call the new API
-    const response = await api.get(`${API_ROUTE_PREFIX}/random`, {
-      params: {
-        number: amount,
-      },
-    });
-
-    const recipes = response.data.recipes;
-    return { data: { recipes: recipes } };
+    const response = await axios.get(`/recipes/random`);
+    console.log("Response data:", response.data); // logs the returned data from API
+    console.log("Response config:", response.config); // logs the Axios config used
+    console.log("Response status:", response.status); // Use the data in your application
+    return response.data;
   } catch (error) {
     console.error("Error fetching random recipes:", error);
-    return { data: { recipes: [] } };
+    const res = await axios.get("/");
+    console.log("this is res", res.data); // Use the data in your application
   }
 }
 
@@ -50,32 +48,25 @@ export async function mockGetRecipesPreviewRandom(amount = 1) {
  */
 export async function mockGetRecipeFullDetails(recipeId) {
   try {
-    // Call the new API
-    const response = await api.get(`${API_ROUTE_PREFIX}/${recipeId}`);
+    console.log("This recipe id in mockGetfullDetails:", recipeId); // Correct"recipeId);
+    // Call the API with the correct endpoint for recipe details
+    const response = await axios.get(`/recipes/details/${recipeId}`);
+    console.log("Response data:", response.data); // logs the returned data from API
 
+    // Assuming the response data includes the recipe object as part of `response.data`
     return { status: 200, data: { recipe: response.data } };
   } catch (error) {
-    console.error("Error fetching recipe details:", error);
-    return { status: 500, data: {} };
+    console.error("Error fetching recipe details:", error.message);
+
+    // Return the status and empty data in case of an error
+    return { status: error.response ? error.response.status : 500, data: {} };
   }
 }
 
-/**
- * Search for recipes with various filters and sorting options.
- *
- * @param {Object} options - The search parameters.
- * @param {string} options.query - The search query.
- * @param {number} options.resultsCount - Number of results to return.
- * @param {string} options.sortBy - Sorting option ('likes' or 'time').
- * @param {string} options.filterBy - Filtering option ('vegetarian', 'vegan', etc.).
- * @param {string} options.cuisineType - The type of cuisine to filter by.
- * @param {string} options.mealType - The type of meal to filter by.
- * @returns {Array} - An array of recipes that match the search criteria.
- */
 export async function mocksearchRecipes({
   query,
-  resultsCount,
-  sortBy,
+  resultsCount = 10, // Default to 10 results if not provided
+  sortBy = "popularity", // Default sorting by popularity
   filterBy,
   cuisineType,
   mealType,
@@ -90,17 +81,12 @@ export async function mocksearchRecipes({
     let params = {
       query: searchQuery,
       number: resultsCount,
+      sortBy: sortBy, // Now directly pass the sortBy value
     };
 
     // Add optional filters to the params
     if (filterBy) {
-      if (filterBy === "vegetarian") {
-        params.diet = "vegetarian";
-      } else if (filterBy === "vegan") {
-        params.diet = "vegan";
-      } else if (filterBy === "gluten free") {
-        params.intolerances = "gluten";
-      }
+      params.diet = filterBy; // Pass the filter directly (e.g., vegetarian, vegan)
     }
 
     if (cuisineType) {
@@ -108,22 +94,13 @@ export async function mocksearchRecipes({
     }
 
     if (mealType) {
-      params.type = mealType;
+      params.mealType = mealType;
     }
 
-    // Sort by time or popularity
-    if (sortBy === "likes") {
-      params.sort = "popularity";
-    } else if (sortBy === "time") {
-      params.sort = "time";
-    }
+    // Make the API call to your backend's search route
+    const response = await axios.get(`/recipes/search`, { params });
 
-    // Call the new API for complex search
-    const response = await api.get(`${API_ROUTE_PREFIX}/search`, {
-      params,
-    });
-
-    const recipes = response.data.results;
+    const recipes = response.data;
     return recipes.length > 0 ? recipes.slice(0, resultsCount) : [];
   } catch (error) {
     console.error("An error occurred while searching for recipes:", error);

@@ -54,7 +54,7 @@
             <h3>Instructions</h3>
             <ol class="instruction-list">
               <li v-for="s in recipe._instructions" :key="s.number">
-                {{ s.step }}
+                {{ s.number }}. {{ s.step }}
               </li>
             </ol>
           </div>
@@ -89,27 +89,30 @@ export default {
       this.$root.store.count++;
     },
   },
+
   async created() {
     try {
       // Get the recipeId from the route parameters
       this.recipeId = this.$route.params.recipeId;
       console.log(
-        "this.recipeId in veiw page by route parmater",
+        "this.recipeId in view page by route parameter:",
         this.recipeId
       );
 
       // Await the response from the mockGetRecipeFullDetails function
       let response = await mockGetRecipeFullDetails(this.recipeId);
 
-      // Check if the response status is not 200 and redirect to NotFound page
-      if (response.status !== 200 || !response.data.recipe) {
+      // Check if the response status is not 200 or recipe data is missing, redirect to NotFound page
+      if (response?.status !== 200 || !response?.data?.recipe?.recipe) {
         this.$router.replace("/NotFound");
         return; // Exit early if the recipe was not found
       }
 
-      // Destructure the response to get recipe details
+      console.log("this is response in recipeViewPage:", response.data);
+
+      // Destructure from the correct nested structure
       let {
-        analyzedInstructions,
+        analyzedInstructions = [],
         instructions,
         extendedIngredients,
         aggregateLikes,
@@ -119,17 +122,26 @@ export default {
         image,
         title,
         id,
-      } = response.data.recipe;
+      } = response.data.recipe.recipe; // Adjust here to access the nested recipe object
 
-      // Process the instructions (if there are analyzed instructions)
-      let _instructions = analyzedInstructions
-        .map((fstep) => {
-          if (fstep.steps && fstep.steps.length > 0) {
-            fstep.steps[0].step = fstep.name + fstep.steps[0].step;
-          }
-          return fstep.steps;
-        })
-        .reduce((a, b) => [...a, ...b], []);
+      // Ensure analyzedInstructions exists and has valid data before mapping
+
+      let _instructions = [];
+      if (
+        Array.isArray(analyzedInstructions) &&
+        analyzedInstructions.length > 0
+      ) {
+        _instructions = analyzedInstructions
+          .map((instruction) => {
+            return instruction.steps.map((step) => {
+              return {
+                number: step.number, // the step number
+                step: step.step, // the instruction text for the step
+              };
+            });
+          })
+          .flat(); // Flatten the array of arrays into a single array
+      }
 
       // Create the final _recipe object
       let _recipe = {
@@ -146,6 +158,14 @@ export default {
         id,
       };
 
+      // Log each part of the recipe to see what data is available
+      console.log("Recipe Title:", _recipe.title);
+      console.log("Recipe Image:", _recipe.image);
+      console.log("Recipe Summary:", _recipe.summary);
+      console.log("Recipe Instructions:", _recipe.instructions);
+      console.log("Recipe Ingredients:", _recipe.extendedIngredients);
+      console.log("Recipe Analyezd:", _recipe.analyzedInstructions);
+
       // Assign the recipe to the component's data
       this.recipe = _recipe;
 
@@ -156,7 +176,7 @@ export default {
 
       console.log(this.recipe.id, "recipeId");
     } catch (error) {
-      console.log("Error fetching recipe:", error);
+      console.error("Error fetching recipe:", error);
     }
   },
 };

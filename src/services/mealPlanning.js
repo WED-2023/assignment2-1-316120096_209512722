@@ -84,7 +84,7 @@ export async function mockGetRecipeInfo(recipeid) {
   let response = await mockGetRecipeFullDetails(recipeid);
 
   // Destructure the recipe object from response
-  let recipe = response.data.recipe;
+  let recipe = response.data.recipe.recipe;
 
   return {
     id: recipe.id,
