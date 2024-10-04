@@ -87,6 +87,7 @@ export default {
       console.log(this.$route.params.recipeId);
       this.loading = true;
       const result = await mockgetRecipeInstructions(this.recipeId);
+      console.log(" this is the result", result);
 
       if (result.error) {
         this.error = result.error;

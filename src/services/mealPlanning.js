@@ -57,27 +57,14 @@ export function mockRemoveAllMeals() {
 }
 
 export async function mockgetRecipeInstructions(recipeId, userName) {
-  try {
-    const response = await axios.get(
-      `https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions`,
-      {
-        params: {
-          apiKey: "a2627e0fb27042d2b386078fda160ee9", // Your Spoonacular API key
-        },
-      }
-    );
-
-    if (response.data) {
-      console.log(`Recipe instructions for ${userName}:`, response.data);
-      return response.data; // Return the entire JSON response
-    } else {
-      console.log(`No instructions found for recipeId: ${recipeId}`);
-      return [];
-    }
-  } catch (error) {
-    console.error(`Error fetching recipe instructions for ${recipeId}:`, error);
-    throw error;
-  }
+  let response = await axios.get(`/recipes/AnalyedInstructions`, {
+    params: {
+      recipeId: recipeId,
+      username: userName,
+    },
+  });
+  console.log("this is response", response.data);
+  return response.data;
 }
 
 export async function mockGetRecipeInfo(recipeid) {
