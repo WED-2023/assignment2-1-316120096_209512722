@@ -3,7 +3,7 @@
     <router-link
       :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
       class="recipe-item"
-      @click="addWatchedRecipe(recipe.id)"
+      @click.native="addWatchedRecipe(recipe.id)"
     >
       <div class="recipe-image-container">
         <span
@@ -43,7 +43,7 @@
         <span
           v-if="!isFavorite && $root.store.username"
           class="favorite-indicator"
-          @click.prevent="addFavoriteRecipe(recipe.id)"
+          @click.prevent="addFavoriteRecipes(recipe.id)"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -192,10 +192,10 @@
 
 <script>
 import {
-  mockGetWatchedRecipes,
-  mockAddWatchedRecipe,
-  mockGetFavorites,
-  mockAddFavorite,
+  GetWatchedRecipes,
+  AddWatchedRecipe,
+  getFavoriteRecipes,
+  addFavoriteRecipe,
 } from "@/services/user";
 import swal from "sweetalert";
 
@@ -216,7 +216,7 @@ export default {
   data() {
     return {
       recipe: {},
-      userName: "",
+      userName: this.$root.store.username ,
       image_load: true,
       watchedRecipes: [],
       favoriteRecipes: [],
@@ -260,15 +260,15 @@ export default {
     async fetchWatchedRecipes() {
       // Make fetchWatchedRecipes asynchronous
       try {
-        const { response } = await mockGetWatchedRecipes(this.userName || "");
-        this.watchedRecipes = response.data.recipes.map((r) => r.id);
+        const { response } = await GetWatchedRecipes(this.$root.store.username || "");
+        this.watchedRecipes = response.data.recipes_id;
       } catch (error) {
         console.error("Error fetching watched recipes:", error);
       }
     },
     async fetchFavoriteRecipes() {
       try {
-        const { response } = await mockGetFavorites(this.userName || "");
+        const { response } = await getFavoriteRecipes(this.$root.store.username || "");
         this.favoriteRecipes = response.data.recipes.map((r) => r.id);
       } catch (error) {
         console.log("error");
@@ -276,17 +276,18 @@ export default {
       }
     },
     addWatchedRecipe(recipeId) {
-      mockAddWatchedRecipe($root.store.username, recipeId);
+      console.log("recipeId in addWatchedRecipe:", recipeId);
+      AddWatchedRecipe(this.$root.store.username, recipeId);
       this.fetchWatchedRecipes();
     },
-    addFavoriteRecipe: async function(recipeId) {
+    addFavoriteRecipes: async function(recipeId) {
       const message = `${this.$root.store.username}, thank you for liking ${this.recipe.title} :)`;
       swal("Favorite Added!", message, "success");
 
       if (recipeId && this.favoriteRecipes.includes(recipeId)) {
         return;
       }
-      await mockAddFavorite(this.recipe.id, this.$root.store.username);
+      await addFavoriteRecipe(this.$root.store.username,this.recipe.id);
       await this.fetchFavoriteRecipes();
     },
     onImageError() {

@@ -90,21 +90,22 @@
       </b-form-group>
 
       <b-form-group
-        id="input-group-country"
-        label-cols-sm="3"
-        label="Country:"
-        label-for="country"
-      >
-        <b-form-select
-          id="country"
-          v-model="$v.form.country.$model"
-          :options="countries"
-          :state="validateState('country')"
-        ></b-form-select>
-        <b-form-invalid-feedback>
-          Country is required
-        </b-form-invalid-feedback>
-      </b-form-group>
+          id="input-group-country"
+          label-cols-sm="3"
+          label="Country:"
+          label-for="country"
+        >
+          <b-form-select
+            id="country"
+            v-model="$v.form.country.$model"
+            :options="countries"
+            :state="validateState('country')"
+            class="w-100"
+          ></b-form-select>
+          <b-form-invalid-feedback>
+            Country is required
+          </b-form-invalid-feedback>
+        </b-form-group>
 
       <b-form-group
         id="input-group-Password"
@@ -196,7 +197,7 @@ import {
   sameAs,
   email,
 } from "vuelidate/lib/validators";
-import { mockRegister } from "../services/auth.js";
+import { Register } from "../services/auth.js";
 export default {
   name: "Register",
   data() {
@@ -274,15 +275,19 @@ export default {
         const userDetails = {
           username: this.form.username,
           password: this.form.password,
+          firstname: this.form.firstName,
+          lastname: this.form.lastName,
+          email: this.form.email,
+          country: this.form.country
         };
 
-        const response = mockRegister(userDetails);
+        const response = await Register(userDetails);
 
         this.$router.push("/login");
         // console.log(response);
       } catch (err) {
         console.log(err.response);
-        this.form.submitError = err.response.data.message;
+        this.form.submitError = "user already exist";
       }
     },
 
@@ -316,7 +321,7 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
 .container {
-  max-width: 400px;
+  max-width: 800px;
   background-color: #f9f9f9;
   padding: 20px;
   border-radius: 10px;

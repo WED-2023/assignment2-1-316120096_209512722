@@ -1,31 +1,52 @@
-// src/services/auth.js
+import axios from "axios";
 
+axios.defaults.baseURL = "http://localhost:3000"; // Base URL for your server
 
-  export function mockLogin(credentials, success = true) {
-    // Check if already logged in
-    if (!success) {
-      throw { status: 409, response: { data: { message: "A user is already logged in", success: false } } };
+// Login function - Makes a POST request to the server's Login endpoint
+export async function Login(username, password) {
+  try {
+    const response = await axios.post("/auth/Login", {
+      username: username,
+      password: password,
+    });
+    return response.data; // Return the server response
+  } catch (error) {
+    if (error.response) {
+      throw error.response.data; // Forward the error message from the server
     }
-
-    // If all checks pass, return a success message
-    return { status: 200, response: { data: { message: "login succeeded", success: true}} };
+    throw { message: "Network error. Please try again later." }; // Handle other errors
   }
-  
+}
 
-  export function mockRegister(userDetails, success = true) {
-
-    if (!success) {
-      throw { status: 409, response: { data: { message: "Username taken", success: false } } };
+// Register function - Makes a POST request to the server's Register endpoint
+export async function Register(userDetails) {
+  try {
+    const response = await axios.post("/auth/Register", {
+      username: userDetails.username,
+      firstname: userDetails.firstname,
+      lastname: userDetails.lastname,
+      country: userDetails.country,
+      password: userDetails.password,
+      email: userDetails.email,
+    });
+    return response.data; // Return the server response
+  } catch (error) {
+    if (error.response) {
+      throw error.response.data; // Forward the error message from the server
     }
-  
-    return { status: 200, response: { data: { message: "user created", success: true}} };
+    throw { message: "Network error. Please try again later." }; // Handle other errors
   }
-  
+}
 
-
-  export function mockLogout() {
-    return { status: 200, response: { data: { message: "logout succeeded", success: true}} };
-
+// Logout function - Makes a POST request to the server's Logout endpoint
+export async function Logout() {
+  try {
+    const response = await axios.post("/auth/Logout");
+    return response.data; // Return the server response
+  } catch (error) {
+    if (error.response) {
+      throw error.response.data; // Forward the error message from the server
+    }
+    throw { message: "Network error. Please try again later." }; // Handle other errors
   }
-  
-
+}

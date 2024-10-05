@@ -3,6 +3,10 @@ import e from "cors";
 import recipe_full_view from "../assets/mocks/recipe_full_view.json";
 import recipe_preview from "../assets/mocks/recipe_preview.json";
 import family_recipes_preview from "../assets/mocks/family_recipes_preview.json";
+import axios from "axios";
+
+axios.defaults.baseURL = "http://localhost:3000"; // Base URL for your server
+
 let favortieRecipes = [
   {
     id: 716429,
@@ -48,20 +52,13 @@ let userRecipes = [...recipe_preview];
 let familyRecipes = [...family_recipes_preview];
 let watchedRecipes = [...recipe_preview];
 
-export function mockGetWatchedRecipes(userName) {
-  console.log(userName, "userName");
-  return {
-    status: 200,
-    response: {
-      data: {
-        recipes: watchedRecipes,
-      },
-    },
-  };
-}
-export function mockAddWatchedRecipe(recipeId, userName) {
-  if (!watchedRecipes.includes(recipeId)) {
-    watchedRecipes.push(recipeId);
+export async function AddWatchedRecipe(username, recipeId) {
+  try {
+    const response = await axios.post('/user/postwatched', {
+      recipeId: recipeId,
+      userName: username,
+    });
+    
     return {
       status: 200,
       response: {
@@ -71,53 +68,120 @@ export function mockAddWatchedRecipe(recipeId, userName) {
         },
       },
     };
-  } else {
+  } catch (err) {
+    if (err.response.status === 400) {
+      return {
+        status: 400,
+        response: {
+          data: {
+            message: "The Recipe is already marked as watched",
+            success: false,
+          },
+        },
+      };
+    }
+    console.error("Error marking recipe as watched:", err);
     return {
-      status: 400,
+      status: err.response.status,
       response: {
         data: {
-          message: "The Recipe is already marked as watched",
+          message: "Failed to mark the recipe as watched",
           success: false,
         },
       },
     };
   }
 }
-export function mockAddFavorite(recipeId, userName) {
-  const recipe = recipe_preview.find((recipe) => recipe.id === recipeId);
-  favortieRecipes.push(recipe);
-  if (recipe) {
+export async function GetWatchedRecipes(userName) {
+  try {
+    const response = await axios.get(`/user/getwatched/${userName}`, );
     return {
       status: 200,
       response: {
         data: {
-          message: "The Recipe successfully saved as favorite",
-          success: true,
+          recipes: response.data, 
         },
       },
     };
-  } else {
+  } catch (err) {
+    console.error("Error fetching watched recipes:", err);
     return {
-      status: 404,
+      status: err.response.status,
       response: {
         data: {
-          message: "The Recipe not found",
+          message: "Failed to retrieve watched recipes",
           success: false,
         },
       },
     };
   }
 }
-export function mockGetFavorites(userName) {
-  return {
-    status: 200,
-    response: {
-      data: {
-        recipes: favortieRecipes,
+export async function addFavoriteRecipe(username, recipeId) {
+  try {
+    const response = await axios.post('/user/favorites', {
+      userName: username,
+      recipeId: recipeId,
+      
+    });
+    
+    return {
+      status: 200,
+      response: {
+        data: {
+          message: "The Recipe successfully marked as watched",
+          success: true,
+        },
       },
-    },
-  };
+    };
+  } catch (err) {
+    if (err.response.status === 400) {
+      return {
+        status: 400,
+        response: {
+          data: {
+            message: "The Recipe is already marked as watched",
+            success: false,
+          },
+        },
+      };
+    }
+    console.error("Error marking recipe as watched:", err);
+    return {
+      status: err.response.status,
+      response: {
+        data: {
+          message: "Failed to mark the recipe as watched",
+          success: false,
+        },
+      },
+    };
+  }
 }
+export async function getFavoriteRecipes(userName) {
+  try {
+    const response = await axios.get(`/user/favorites/${userName}`, );
+    return {
+      status: 200,
+      response: {
+        data: {
+          recipes: response.data, 
+        },
+      },
+    };
+  } catch (err) {
+    console.error("Error fetching watched recipes:", err);
+    return {
+      status: err.response.status,
+      response: {
+        data: {
+          message: "Failed to retrieve watched recipes",
+          success: false,
+        },
+      },
+    };
+  }
+}
+
 
 export function mockAddUserRecipes(recipeDetails) {
   userRecipes.push(recipeDetails);
