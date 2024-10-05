@@ -2,6 +2,7 @@
   <div class="container">
     <h1 class="title">Register</h1>
     <b-form @submit.prevent="onRegister" @reset.prevent="onReset">
+      <!-- Username Field -->
       <b-form-group
         id="input-group-username"
         label-cols-sm="3"
@@ -21,7 +22,70 @@
           Username length should be between 3-8 characters long
         </b-form-invalid-feedback>
         <b-form-invalid-feedback v-if="!$v.form.username.alpha">
-          Username alpha
+          Username must contain only alphabetic characters
+        </b-form-invalid-feedback>
+      </b-form-group>
+
+      <!-- First Name Field -->
+      <b-form-group
+        id="input-group-firstName"
+        label-cols-sm="3"
+        label="First Name:"
+        label-for="firstName"
+      >
+        <b-form-input
+          id="firstName"
+          v-model="$v.form.firstName.$model"
+          type="text"
+          :state="validateState('firstName')"
+        ></b-form-input>
+        <b-form-invalid-feedback v-if="!$v.form.firstName.required">
+          First name is required
+        </b-form-invalid-feedback>
+        <b-form-invalid-feedback v-else-if="!$v.form.firstName.alpha">
+          First name must contain only alphabetic characters
+        </b-form-invalid-feedback>
+      </b-form-group>
+
+      <!-- Last Name Field -->
+      <b-form-group
+        id="input-group-lastName"
+        label-cols-sm="3"
+        label="Last Name:"
+        label-for="lastName"
+      >
+        <b-form-input
+          id="lastName"
+          v-model="$v.form.lastName.$model"
+          type="text"
+          :state="validateState('lastName')"
+        ></b-form-input>
+        <b-form-invalid-feedback v-if="!$v.form.lastName.required">
+          Last name is required
+        </b-form-invalid-feedback>
+        <b-form-invalid-feedback v-else-if="!$v.form.lastName.alpha">
+          Last name must contain only alphabetic characters
+        </b-form-invalid-feedback>
+      </b-form-group>
+
+      <!-- Email Field -->
+      <b-form-group
+        id="input-group-email"
+        label-cols-sm="3"
+        label="Email:"
+        label-for="email"
+      >
+        <b-form-input
+          id="email"
+          v-model="$v.form.email.$model"
+          type="email"
+          :state="validateState('email')"
+        ></b-form-input>
+        <b-form-invalid-feedback v-if="!$v.form.email.required">
+          Email is required
+        </b-form-invalid-feedback>
+        <b-form-invalid-feedback v-else-if="!$v.form.email.email">
+          Please enter a valid email address
         </b-form-invalid-feedback>
       </b-form-group>
 
@@ -117,6 +181,8 @@
       <pre class="m-0"><strong>form:</strong> {{ form }}</pre>
       <pre class="m-0"><strong>$v.form:</strong> {{ $v.form }}</pre>
     </b-card> -->
+
+    <!-- Country, Password, Confirm Password Fields (as before) -->
   </div>
 </template>
 
@@ -157,6 +223,18 @@ export default {
         length: (u) => minLength(3)(u) && maxLength(8)(u),
         alpha,
       },
+      firstName: {
+        required,
+        alpha,
+      },
+      lastName: {
+        required,
+        alpha,
+      },
+      email: {
+        required,
+        email,
+      },
       country: {
         required,
       },
@@ -170,6 +248,7 @@ export default {
       },
     },
   },
+
   mounted() {
     // console.log("mounted");
     this.countries.push(...countries);
