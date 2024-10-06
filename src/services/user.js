@@ -54,11 +54,11 @@ let watchedRecipes = [...recipe_preview];
 
 export async function AddWatchedRecipe(username, recipeId) {
   try {
-    const response = await axios.post('/user/postwatched', {
+    const response = await axios.post("/user/postwatched", {
       recipeId: recipeId,
       userName: username,
     });
-    
+
     return {
       status: 200,
       response: {
@@ -94,12 +94,38 @@ export async function AddWatchedRecipe(username, recipeId) {
 }
 export async function GetWatchedRecipes(userName) {
   try {
-    const response = await axios.get(`/user/getwatched/${userName}`, );
+    const response = await axios.get(`/user/getwatched/${userName}`);
     return {
       status: 200,
       response: {
         data: {
-          recipes: response.data, 
+          recipes: response.data,
+        },
+      },
+    };
+  } catch (err) {
+    console.error("Error fetching watched recipes:", err);
+    return {
+      status: err.response.status,
+      response: {
+        data: {
+          message: "Failed to retrieve watched recipes",
+          success: false,
+        },
+      },
+    };
+  }
+}
+
+export async function GetWatchedRecipesSorted(userName) {
+  try {
+    console.log("iam un sorted");
+    const response = await axios.get(`/user/Sorted/${userName}`);
+    return {
+      status: 200,
+      response: {
+        data: {
+          recipes: response.data,
         },
       },
     };
@@ -118,12 +144,11 @@ export async function GetWatchedRecipes(userName) {
 }
 export async function addFavoriteRecipe(username, recipeId) {
   try {
-    const response = await axios.post('/user/favorites', {
+    const response = await axios.post("/user/favorites", {
       userName: username,
       recipeId: recipeId,
-      
     });
-    
+
     return {
       status: 200,
       response: {
@@ -159,12 +184,13 @@ export async function addFavoriteRecipe(username, recipeId) {
 }
 export async function getFavoriteRecipes(userName) {
   try {
-    const response = await axios.get(`/user/favorites/${userName}`, );
+    const response = await axios.get(`/user/favorites/${userName}`);
+    console.log(response.data);
     return {
       status: 200,
       response: {
         data: {
-          recipes: response.data, 
+          recipes: response.data,
         },
       },
     };
@@ -181,7 +207,6 @@ export async function getFavoriteRecipes(userName) {
     };
   }
 }
-
 
 export function mockAddUserRecipes(recipeDetails) {
   userRecipes.push(recipeDetails);

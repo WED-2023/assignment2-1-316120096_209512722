@@ -113,7 +113,6 @@ export default {
         const recipes = response.response.data.recipes;
         this.items = recipes.map((recipe) => ({
           ...recipe,
-          image: recipe.image || this.getPlaceholderImage(recipe.title),
         }));
       } catch (error) {
         console.error(error);

@@ -69,6 +69,7 @@ export async function mockgetRecipeInstructions(recipeId, userName) {
 
 export async function mockGetRecipeInfo(recipeid) {
   let response = await mockGetRecipeFullDetails(recipeid);
+  console.log("this is response", response.data);
 
   // Destructure the recipe object from response
   let recipe = response.data.recipe.recipe;
@@ -86,6 +87,7 @@ export async function mockGetRecipeInfo(recipeid) {
       unit: ingredient.unit,
     })),
     summary: recipe.summary,
+    aggregateLikes: recipe.aggregateLikes,
   };
 }
 

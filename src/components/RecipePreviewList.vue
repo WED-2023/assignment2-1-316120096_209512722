@@ -19,6 +19,8 @@
 <script>
 import RecipePreview from "./RecipePreview.vue";
 import { mockGetRecipesPreviewRandom } from "../services/recipes.js";
+import { mockGetRecipeInfo } from "../services/mealPlanning.js";
+import { GetWatchedRecipesSorted } from "../services/user.js";
 
 export default {
   name: "RecipePreviewList",
@@ -35,6 +37,10 @@ export default {
       type: String,
       required: true,
     },
+    recipesUpdated: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -48,26 +54,53 @@ export default {
     async updateRecipes() {
       try {
         const amountToFetch = 3; // Fetching 3 random recipes
-        const response = await mockGetRecipesPreviewRandom(amountToFetch);
+        if (this.recipesUpdated) {
+          console.log("recipes updated");
+          const response = await GetWatchedRecipesSorted(
+            this.$root.store.username
+          );
+          console.log("this is the user name", this.$root.store.username);
+          console.log("Full response object:", response); // Logs full response
+          console.log("Data property inside response:", response.response.data); // Logs data inside response
+          console.log(
+            "Recipes inside response.data:",
+            response.response.data.recipes
+          ); // Logs the recipes array
 
-        // Assuming the response is an array of recipe objects
-        console.log(response); // Log the entire response
+          // Assuming response.data.recipes is a list of objects containing recipe_id
+          if (
+            response.response.data.recipes &&
+            Array.isArray(response.response.data.recipes)
+          ) {
+            const recipePromises = response.response.data.recipes.map(
+              (recipe) => mockGetRecipeInfo(recipe.recipe_id) // Using recipe_id here
+            );
 
-        if (Array.isArray(response)) {
-          this.recipes = response; // Directly set the response if it's an array
-        } else if (response.data && Array.isArray(response.data)) {
-          this.recipes = response.data; // Set the data property if response has it
+            this.recipes = await Promise.all(recipePromises); // Replace recipes array
+            console.log(this.recipes);
+          } else {
+            console.error(
+              "Unexpected response format for watched recipes:",
+              response
+            );
+          }
         } else {
-          console.error("Unexpected response format", response);
+          const response = await mockGetRecipesPreviewRandom(amountToFetch);
+
+          if (Array.isArray(response)) {
+            this.recipes = response; // Directly set the response if it's an array
+          } else if (response.data && Array.isArray(response.data)) {
+            this.recipes = response.data; // Set the data property if response has it
+          } else {
+            console.error(
+              "Unexpected response format for random recipes",
+              response
+            );
+          }
         }
       } catch (error) {
-        console.log("Error fetching recipes", error);
+        console.error("Error fetching recipes", error); // Use console.error for better clarity
       }
-    },
-
-    fetchDifferentRecipes() {
-      this.updateRecipes(); // Call updateRecipes method
-      this.$emit("recipes-updated"); // Emit a custom event
     },
 
     fetchDifferentRecipes() {

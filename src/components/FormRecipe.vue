@@ -234,6 +234,7 @@
 
 <script>
 import { mockAddUserRecipes } from "../services/recipes.js";
+import axios from "axios";
 
 export default {
   data() {
@@ -260,6 +261,7 @@ export default {
       }
     },
     async onSubmit() {
+      axios.defaults.baseURL = "http://localhost:3000";
       try {
         if (
           this.form.ingredients.length === 0 ||
@@ -271,20 +273,38 @@ export default {
 
         const formData = new FormData();
         formData.append("title", this.form.title);
-        formData.append("image", this.form.image);
+        formData.append("image", this.form.image); // Ensure image is correctly captured
         formData.append("description", this.form.description);
         formData.append("readyInMinutes", this.form.readyInMinutes);
         formData.append("instructions", JSON.stringify(this.form.instructions));
         formData.append("ingredients", JSON.stringify(this.form.ingredients));
+        console.log(this.$root.store.username);
+        const response = await axios.post(
+          `/user/addUserRecipe/${this.$root.store.username}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
 
-        await mockAddUserRecipes(formData);
+        // Log the entire response object
+        console.log("Full Response:", response);
 
-        this.success = true;
-        this.resetForm();
+        // Check if response.data exists before accessing it
+        if (response.data && response.data.success) {
+          this.success = true;
+          this.resetForm();
+        } else {
+          this.message = "Something went wrong!";
+        }
       } catch (error) {
+        console.log("Error Response:", error); // Log any errors from the server
         this.errors = error.response.data.errors || {};
       }
     },
+
     addInstruction() {
       this.form.instructions.push("");
       this.message = "Add Recipe";

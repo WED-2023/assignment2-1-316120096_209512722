@@ -94,15 +94,17 @@ export default {
     },
     async Login() {
       try {
-        const response = await Login(
-          this.form.username,
-          this.form.password
-        );
+        const response = await Login(this.form.username, this.form.password);
 
         this.$root.loggedIn = true;
         console.log(this.$root.store.login);
         this.$root.store.login(this.form.username);
         this.$router.push("/");
+        this.$root.store.username = this.form.username;
+        console.log(
+          "this is the username in login store in root",
+          this.$root.store.username
+        );
       } catch (err) {
         console.log(err.response);
         this.form.submitError = "invalid username or password";

@@ -31,6 +31,7 @@
       </div>
       <RecipePreviewList
         title="Last Viewed Recipes"
+        :recipesUpdated="true"
         :class="{
           RandomRecipes: true,
           blur: !$root.store.username,
