@@ -1,6 +1,7 @@
 import axios from "axios";
+import state from "../store"
 
-axios.defaults.baseURL = "http://localhost:3000"; // Base URL for your server
+axios.defaults.baseURL  =state.server_domain ; // Base URL for your server
 
 // Login function - Makes a POST request to the server's Login endpoint
 export async function Login(username, password) {

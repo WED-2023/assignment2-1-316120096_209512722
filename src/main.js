@@ -5,6 +5,9 @@ import axios from "axios";
 
 import routes from "./routes";
 import VueRouter from "vue-router";
+import state from "./store";
+
+
 Vue.use(VueRouter);
 const router = new VueRouter({
   routes,
@@ -74,7 +77,7 @@ export const api = axios.create({
 });
 
 const shared_data = Vue.observable({
-  server_domain: "http://localhost:3000",
+  server_domain: state.server_domain,
   username: localStorage.username,
   count: 0,
 
