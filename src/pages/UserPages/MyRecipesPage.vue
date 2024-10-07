@@ -1,5 +1,5 @@
 <template>
-  <GenericPage
+  <MyRecipes
     pageName="My Kitchen Creations 🍳🎨"
     :fetchData="fetchFavorites"
     :newPageName="{
@@ -11,17 +11,17 @@
 </template>
 
 <script>
-import GenericPage from "@/components/GenericPage.vue";
-import { mockGetUserRecipes } from "../../services/user";
+import MyRecipes from "@/components/MyRecipes.vue";
+import { getUserRecipes } from "../../services/user";
 
 export default {
   name: "FavoritesPage",
   components: {
-    GenericPage,
+    MyRecipes,
   },
   methods: {
     fetchFavorites() {
-      return mockGetUserRecipes();
+      return getUserRecipes(this.$root.store.username);
     },
   },
 };

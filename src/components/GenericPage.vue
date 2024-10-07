@@ -110,6 +110,7 @@ export default {
 
       try {
         const response = await this.fetchData();
+        
         const recipes = response.response.data.recipes;
         this.items = recipes.map((recipe) => ({
           ...recipe,

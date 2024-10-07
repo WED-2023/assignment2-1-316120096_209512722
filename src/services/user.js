@@ -7,8 +7,9 @@ import axios from "axios";
 
 import state from "../store";
 
-let url = state.server_domain;
-axios.defaults.baseURL = url;
+// let url = state.server_domain;
+// axios.defaults.baseURL = url;
+axios.defaults.baseURL = "http://localhost:3000";
 
 let favortieRecipes = [
   {
@@ -123,7 +124,7 @@ export async function GetWatchedRecipes(userName) {
 export async function GetWatchedRecipesSorted(userName) {
   try {
     console.log("iam un sorted");
-    const response = await axios.get(`/user/Sorted/${userName}`);
+    const response = await axios.get(`/user/sorted/${userName}`);
     return {
       status: 200,
       response: {
@@ -211,27 +212,15 @@ export async function getFavoriteRecipes(userName) {
   }
 }
 
-export function mockAddUserRecipes(recipeDetails) {
-  userRecipes.push(recipeDetails);
-  return {
-    status: 200,
-    response: {
-      data: {
-        message: "The Recipe successfully added to My Recipes",
-        success: true,
-      },
-    },
-  };
-}
-export function mockGetUserRecipes() {
-  return {
-    status: 200,
-    response: {
-      data: {
-        recipes: userRecipes,
-      },
-    },
-  };
+export async function getUserRecipes(username) {
+  try {
+    const response = await axios.get(`/user/myRecipes/${username}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user recipes:', error);
+    throw error;
+  }
 }
 
 export function mockAddFamilyRecipes(recipeDetails) {
