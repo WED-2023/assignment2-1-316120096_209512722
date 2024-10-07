@@ -233,7 +233,6 @@
 </template>
 
 <script>
-import { mockAddUserRecipes } from "../services/recipes.js";
 import axios from "axios";
 
 export default {
@@ -261,50 +260,51 @@ export default {
       }
     },
     async onSubmit() {
-      axios.defaults.baseURL = "http://localhost:3000";
-      try {
-        if (
-          this.form.ingredients.length === 0 ||
-          this.form.instructions.length === 0
-        ) {
-          this.message = "Please add ingredients and instructions";
-          return;
-        }
+  axios.defaults.baseURL = "http://localhost:3000";
+  try {
+    if (
+      this.form.ingredients.length === 0 ||
+      this.form.instructions.length === 0
+    ) {
+      this.message = "Please add ingredients and instructions";
+      return;
+    }
 
-        const formData = new FormData();
-        formData.append("title", this.form.title);
-        formData.append("image", this.form.image); // Ensure image is correctly captured
-        formData.append("description", this.form.description);
-        formData.append("readyInMinutes", this.form.readyInMinutes);
-        formData.append("instructions", JSON.stringify(this.form.instructions));
-        formData.append("ingredients", JSON.stringify(this.form.ingredients));
-        console.log(this.$root.store.username);
-        const response = await axios.post(
-          `/user/addUserRecipe/${this.$root.store.username}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-
-        // Log the entire response object
-        console.log("Full Response:", response);
-
-        // Check if response.data exists before accessing it
-        if (response.data && response.data.success) {
-          this.success = true;
-          this.resetForm();
-        } else {
-          this.message = "Something went wrong!";
-        }
-      } catch (error) {
-        console.log("Error Response:", error); // Log any errors from the server
-        this.errors = error.response.data.errors || {};
+    const formData = new FormData();
+    formData.append("title", this.form.title);
+    formData.append("image", this.form.image);
+    formData.append("description", this.form.description);
+    formData.append("readyInMinutes", this.form.readyInMinutes);
+    formData.append("instructions", JSON.stringify(this.form.instructions));
+    formData.append("ingredients", JSON.stringify(this.form.ingredients));
+    const response = await axios.post(
+      `/user/addUserRecipe/${this.$root.store.username}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       }
-    },
+    );
 
+    console.log("Full Response:", response);
+
+    if (response.data && response.data.success) {
+      this.success = true;
+      this.resetForm();
+    } else {
+      this.message = response.data.message || "Something went wrong!";
+    }
+  } catch (error) {
+    console.log("Error Response:", error.response);
+    if (error.response && error.response.data) {
+      this.message = error.response.data.message || "An error occurred";
+      this.errors = error.response.data.errors || {};
+    } else {
+      this.message = "An unexpected error occurred";
+    }
+  }
+},
     addInstruction() {
       this.form.instructions.push("");
       this.message = "Add Recipe";

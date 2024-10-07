@@ -4,8 +4,9 @@ import recipe_preview from "../assets/mocks/recipe_preview.json";
 import axios from "axios";
 import state from "../store";
 
-let url = state.server_domain;
-axios.defaults.baseURL = url;
+// let url = state.server_domain;
+// axios.defaults.baseURL = url;
+axios.defaults.baseURL = "http://localhost:3000";
 
 /**
  * Get a preview of recipes (mock).

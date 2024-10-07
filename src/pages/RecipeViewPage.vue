@@ -69,7 +69,20 @@ import RecipeButton from "../components/MakeRecipeButton.vue";
 import { mockAddRecipe } from "../services/mealPlanning.js";
 
 export default {
+  props:{
+    fetchData: {
+      type: Boolean,
+      default: true,
+      required: false,
+    },
+    recipe:{
+      type: Object,
+      default: null,
+      required: false,
+    }
+  },
   data() {
+
     return {
       recipe: null,
       recipeId: null,
@@ -91,7 +104,10 @@ export default {
   },
 
   async created() {
+  
     try {
+      let response = [];
+      if (this.fetchData) {
       // Get the recipeId from the route parameters
       this.recipeId = this.$route.params.recipeId;
       console.log(
@@ -100,7 +116,7 @@ export default {
       );
 
       // Await the response from the mockGetRecipeFullDetails function
-      let response = await mockGetRecipeFullDetails(this.recipeId);
+      response = await mockGetRecipeFullDetails(this.recipeId);
 
       // Check if the response status is not 200 or recipe data is missing, redirect to NotFound page
       if (response?.status !== 200 || !response?.data?.recipe?.recipe) {
@@ -109,7 +125,10 @@ export default {
       }
 
       console.log("this is response in recipeViewPage:", response.data);
-
+    }
+    else {
+      response = this.recipe;
+    }
       // Destructure from the correct nested structure
       let {
         analyzedInstructions = [],
